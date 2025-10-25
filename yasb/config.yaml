@@ -33,12 +33,10 @@ bars:
       bottom: -7
       right: 0
     widgets:
-      left: [
-        "home",
-        "active_window",
-      ]
+      left: ["home", "active_window"]
       center: []
-      right: [
+      right:
+        [
           "pomodoro",
           "media",
           "traffic",
@@ -408,7 +406,7 @@ widgets:
             launch: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
           }
         - { icon: "\uf489", launch: "wt" }
-        - { icon: "\uf1ff",launch: "Discord.exe" }
+        - { icon: "\uf1ff", launch: "Discord.exe" }
         - { icon: "\udb82\ude1e", launch: "Code.exe" }
   taskbar:
     type: "yasb.taskbar.TaskbarWidget"

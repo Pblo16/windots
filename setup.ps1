@@ -1,6 +1,21 @@
 # Windows Setup Script by Pablo
 # Ejecutar con PowerShell (Admin si es posible)
 
+function Show-Menu {
+    param (
+        [string]$Title,
+        [string[]]$Options
+    )
+    Write-Host "`n$Title" -ForegroundColor Yellow
+    for ($i = 0; $i -lt $Options.Length; $i++) {
+        Write-Host "  $($i+1)) $($Options[$i])"
+    }
+    do {
+        $choice = Read-Host "Selecciona una opción (1-$($Options.Length))"
+    } while ($choice -notmatch '^[1-9]\d*$' -or $choice -lt 1 -or $choice -gt $Options.Length)
+    return $Options[$choice - 1]
+}
+
 function Require-Admin {
     $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     if (-not $isAdmin) {
@@ -66,22 +81,25 @@ $downloadables = @(
     @{Url = "http://filepilot.tech/download/latest"; Name = "FilePilot" }
 )
 
-$tipoUsuario = Read-Host "[?] ¿Vas a usar este equipo como DESARROLLADOR o CASUAL? (dev/casual)"
+
+$tipoUsuario = Show-Menu "¿Vas a usar este equipo como DESARROLLADOR o CASUAL?" @("Desarrollador", "Casual")
+$tipoUsuario = if ($tipoUsuario -eq "Desarrollador") { "dev" } else { "casual" }
 
 foreach ($app in $commonApps) { Install-App $app.Id $app.Name }
 
 if ($tipoUsuario -eq "dev") {
-    $editor = Read-Host "[?] ¿Prefieres usar VisualStudioCode o Zed? (VisualStudioCode/zed)"
+    $editor = Show-Menu "¿Prefieres usar VisualStudioCode o Zed?" @("VisualStudioCode", "zed")
     Install-App $editors[$editor].Id $editors[$editor].Name
 
     foreach ($app in $devApps) { Install-App $app.Id $app.Name }
 
-    $usarDocker = Read-Host "[?] ¿Vas a usar Docker? (y/n)"
-    if ($usarDocker -eq "y") { Install-App "Docker.DockerDesktop" "Docker Desktop" }
+    $usarDocker = Show-Menu "¿Vas a usar Docker?" @("Sí", "No")
+    if ($usarDocker -eq "Sí") { Install-App "Docker.DockerDesktop" "Docker Desktop" }
 }
 
-$usarGlaze = Read-Host "[?] ¿Quieres usar el Tiling Manager GlazeWM? (y/n)"
-if ($usarGlaze -eq "y") {
+
+$usarGlaze = Show-Menu "¿Quieres usar el Tiling Manager GlazeWM?" @("Sí", "No")
+if ($usarGlaze -eq "Sí") {
     Install-App "glzr-io.glazewm" "GlazeWM"
     Write-Host "[+] Configurando inicio automático de GlazeWM..." -ForegroundColor Cyan
     $taskName = "GlazeWM AutoStart"
@@ -92,8 +110,9 @@ if ($usarGlaze -eq "y") {
     Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -Description "Auto-start GlazeWM at login" | Out-Null
 }
 
-$esAsus = Read-Host "[?] ¿Tu equipo es ASUS? (y/n)"
-if ($esAsus -eq "y") { Install-App "seerge.g-helper" "G-Helper para ASUS" }
+
+$esAsus = Show-Menu "¿Tu equipo es ASUS?" @("Sí", "No")
+if ($esAsus -eq "Sí") { Install-App "seerge.g-helper" "G-Helper para ASUS" }
 
 foreach ($dl in $downloadables) { Install-Downloadable $dl.Url $dl.Name }
 
@@ -115,8 +134,8 @@ Copy-Item "$repoPath\glazewm\*" $glazeConfig -Recurse -Force
 Write-Host "[✓] Configuraciones copiadas correctamente." -ForegroundColor Green
 
 # WSL
-$usarWSL = Read-Host "[?] ¿Quieres usar WSL? (y/n)"
-if ($usarWSL -eq "y") {   
+$usarWSL = Show-Menu "¿Quieres usar WSL?" @("Sí", "No")
+if ($usarWSL -eq "Sí") {
     Write-Host "[+] Revisando WSL..." -ForegroundColor Cyan
     $wslStatus = wsl --status 2>$null
     if ($LASTEXITCODE -ne 0) {
@@ -128,7 +147,6 @@ if ($usarWSL -eq "y") {
     Write-Host "[+] Ejecutando setup dentro de Ubuntu..." -ForegroundColor Cyan
     wsl -d Ubuntu -e bash -c "curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh && chmod +x install.sh && bash install.sh"
 }
-
 
 # Ejecutar variables de entorno personalizadas desde el repo clonado
 try {

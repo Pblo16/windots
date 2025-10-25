@@ -18,6 +18,7 @@
     --main: #10151d;
     --widget-background: #2983f0ba;
 }
+
 * {
     font-size: 12px;
     color: var(--text);
@@ -26,6 +27,7 @@
     margin: 0;
     padding: 0;
 }
+
 .yasb-bar {
     padding: 0px;
     margin: 0;
@@ -35,16 +37,20 @@
     margin-top: 1px;
     margin-bottom: 9px;
 }
+
 .widget {
     padding: 0px;
     margin: 0;
 }
+
 .icon {
     font-size: 14px;
 }
+
 .widget .label {
     padding: 0px 2px;
 }
+
 .clock-widget .widget-container,
 .volume-widget .widget-container,
 .weather-widget .widget-container,
@@ -71,9 +77,10 @@
 }
 
 /* WIFI Setting */
-.wifi-widget .icon{
+.wifi-widget .icon {
     color: var(--mauve) !important;
 }
+
 .wifi-widget .widget-container {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
@@ -85,7 +92,7 @@
 /* WIFI popup*/
 .wifi-menu {
     background: #1e1e24;
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     padding: 4px 0 6px;
     min-width: 300px;
@@ -97,7 +104,7 @@
     font-weight: 600;
     padding: 6px 10px 4px;
     color: #89b4fa;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     margin-bottom: 2px;
 }
 
@@ -113,16 +120,16 @@
 }
 
 .wifi-menu-row:hover {
-    background: rgba(255,255,255,0.06);
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .wifi-menu-row.connected {
-    background: linear-gradient(90deg, rgba(148,226,213,0.18), rgba(148,226,213,0.05));
-    border: 1px solid rgba(148,226,213,0.35);
+    background: linear-gradient(90deg, rgba(148, 226, 213, 0.18), rgba(148, 226, 213, 0.05));
+    border: 1px solid rgba(148, 226, 213, 0.35);
 }
 
 .wifi-menu-row.connected:hover {
-    background: linear-gradient(90deg, rgba(148,226,213,0.26), rgba(148,226,213,0.10));
+    background: linear-gradient(90deg, rgba(148, 226, 213, 0.26), rgba(148, 226, 213, 0.10));
 }
 
 .wifi-menu-row .net-icon {
@@ -159,15 +166,16 @@
 .wifi-menu-row .disconnect-btn {
     font-size: 11px;
     margin-left: 8px;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255, 255, 255, 0.08);
     border: 0;
     padding: 4px 8px;
     border-radius: 5px;
     color: #72747c;
     cursor: pointer;
 }
+
 .wifi-menu-row .disconnect-btn:hover {
-    background: rgba(255,255,255,0.14);
+    background: rgba(255, 255, 255, 0.14);
     color: #cdd6f4;
 }
 
@@ -178,7 +186,7 @@
     justify-content: space-between;
     font-size: 11px;
     color: #9399b2;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .wifi-menu-footer .settings-link {
@@ -186,6 +194,7 @@
     text-decoration: none;
     cursor: pointer;
 }
+
 .wifi-menu-footer .settings-link:hover {
     text-decoration: underline;
 }
@@ -198,29 +207,36 @@
 .cpu-widget {
     padding-right: 0;
 }
+
 .memory-widget {
     padding-left: 0;
 }
+
 .cpu-widget .widget-container {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
 }
+
 .memory-widget .widget-container {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
 }
+
 .memory-widget .label {
     min-width: 34px;
     max-width: 34px;
 }
+
 .cpu-widget .label {
     min-width: 34px;
     max-width: 34px;
 }
+
 .cpu-widget .icon {
     color: var(--mauve);
     margin-right: 4px;
 }
+
 .memory-widget .icon {
     color: var(--mauve);
     margin-right: 4px;
@@ -233,6 +249,7 @@
     font-size: 12px;
     font-weight: 600;
 }
+
 .komorebi-workspaces .ws-btn {
     border: none;
     background-color: #9cd1dd;
@@ -243,14 +260,17 @@
     height: 10px;
     width: 10px;
 }
+
 .komorebi-workspaces .ws-btn:hover {
     background-color: #91b2e7;
 }
+
 .komorebi-workspaces .ws-btn.populated {
     background-color: var(--red);
 }
+
 .komorebi-workspaces .ws-btn.active {
-    background-color: var(--mauve); 
+    background-color: var(--mauve);
     width: 36px;
     height: 10px;
     border-radius: 5px;
@@ -261,10 +281,12 @@
     padding-right: 0px;
     padding-left: 12px;
 }
+
 /*DISK DROPDOWN*/
 .disk-group {
-    background-color: var(--mantle);    
+    background-color: var(--mantle);
 }
+
 .disk-group-row {
     min-width: 220px;
     max-width: 220px;
@@ -274,23 +296,28 @@
     border-radius: 6px;
     border: 1px solid rgba(128, 128, 128, 0);
 }
+
 .disk-group-row:hover {
-    background-color:rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
-.disk-group-label-bar{
+
+.disk-group-label-bar {
     max-height: 8px;
-    border:0px solid rgba(128, 128, 128, 0);
+    border: 0px solid rgba(128, 128, 128, 0);
     background-color: rgba(148, 226, 213, 0.3);
     border-radius: 4px;
 }
-.disk-group-label-bar::chunk{
+
+.disk-group-label-bar::chunk {
     background-color: rgba(148, 226, 213, 1);
     border-radius: 4px;
 }
+
 .disk-group-label {
     font-size: 13px;
 }
+
 .disk-group-label-size {
     font-size: 12px;
     color: rgba(205, 214, 244, 0.5);
@@ -301,6 +328,7 @@
     font-size: 16px;
     padding: 0 1px;
 }
+
 .apps-widget .label:hover {
     color: var(--text);
 }
@@ -310,13 +338,16 @@
     color: var(--mauve);
     margin-right: 4px;
 }
+
 .calendar {
     background-color: var(--crust)
 }
+
 .clock-widget .widget-container {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
 }
+
 .calendar .calendar-table,
 .calendar .calendar-table::item {
     background-color: rgba(17, 17, 27, 0);
@@ -325,16 +356,19 @@
     margin: 0;
     padding: 0;
     border: none;
-    outline: none;  
+    outline: none;
 }
+
 .calendar .calendar-table::item:selected {
     color: var(--main);
     border-radius: 8px;
     background-color: var(--mauve);
 }
+
 .calendar .day-label {
     margin-top: 20px;
 }
+
 .calendar .day-label,
 .calendar .month-label,
 .calendar .date-label {
@@ -345,9 +379,11 @@
     min-width: 180px;
     max-width: 180px;
 }
+
 .calendar .month-label {
     font-weight: normal;
 }
+
 .calendar .date-label {
     font-size: 88px;
     font-weight: 900;
@@ -359,9 +395,11 @@
 .power-menu-widget .label {
     font-size: 14px;
 }
+
 .power-menu-popup {
     background-color: transparent
 }
+
 .power-menu-popup .button {
     padding: 0;
     width: 180px;
@@ -375,6 +413,7 @@
     border-bottom: 10px solid rgba(58, 59, 83, 0);
     margin: 0px;
 }
+
 .power-menu-popup .button.hover {
     background-color: var(--base);
     border-left: 10px solid var(--base);
@@ -382,32 +421,39 @@
     border-top: 10px solid var(--base);
     border-bottom: 10px solid var(--base);
 }
+
 .power-menu-popup .button .label {
     margin-bottom: 8px;
     font-size: 16px;
     font-weight: 500;
     color: var(--overlay2)
 }
+
 .power-menu-popup .button .icon {
     font-size: 64px;
     padding-top: 32px;
     color: var(--surface2)
 }
+
 .power-menu-popup .button.cancel .icon {
     padding: 0;
     margin: 0;
 }
+
 .power-menu-popup .button.cancel .label {
     margin: 0;
 }
+
 .power-menu-popup .button.cancel {
     height: 32px;
     border-radius: 4px;
 }
+
 .power-menu-popup .button.hover .label,
 .power-menu-popup .button.hover .icon {
     color: var(--mauve);
 }
+
 .uptime {
     font-size: 16px;
     margin-bottom: 10px;
@@ -419,11 +465,13 @@
 .whkd-widget {
     padding: 0 6px 0 6px;
 }
+
 .whkd-widget .icon {
     font-size: 18px;
 }
+
 .whkd-popup .edit-config-button {
-    background-color:#1743a1;
+    background-color: #1743a1;
     color: #ffffff;
     padding: 4px 8px 6px 8px;
     font-size: 14px;
@@ -431,9 +479,11 @@
     border-radius: 4px;
     font-family: 'Segoe UI';
 }
+
 .whkd-popup .keybind-buttons-container {
     min-width: 240px;
 }
+
 .whkd-popup .keybind-button {
     background-color: #343538;
     color: white;
@@ -445,20 +495,24 @@
     border-radius: 4px;
     font-family: 'JetBrainsMono NFP';
 }
+
 .whkd-popup .keybind-button.special {
     background-color: #343538;
 }
-.whkd-popup .keybind-row:hover{
+
+.whkd-popup .keybind-row:hover {
     background-color: rgba(136, 138, 155, 0.2);
     border-radius: 8px;
 }
+
 .whkd-popup .plus-separator {
     padding: 0 0px;
-    border:none;
+    border: none;
     font-size: 16px;
     font-weight: bold;
-    background-color:transparent
+    background-color: transparent
 }
+
 .whkd-popup .filter-input {
     padding: 0 8px 2px 8px;
     font-size: 14px;
@@ -470,12 +524,15 @@
     background-color: #2e2e2e;
     min-height: 32px;
 }
+
 .whkd-popup .filter-input:focus {
     border: 1px solid #0078D4;
 }
+
 .whkd-popup .keybind-command {
     font-size: 14px;
 }
+
 .whkd-popup .keybind-header {
     font-size: 16px;
     font-weight: 600;
@@ -491,46 +548,54 @@
 .volume-widget {
     padding-right: 0;
 }
-.volume-widget .widget-container{
+
+.volume-widget .widget-container {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
-} 
+}
+
 .volume-widget .icon {
     color: var(--mauve);
     margin-right: 4px;
-} 
+}
+
 .volume-slider {
     border: none;
 }
+
 .volume-slider::groove {
     background-color: var(--mauve);
     border-radius: 2px;
     height: 4px;
     margin: 4px 0;
 }
-.volume-slider::handle{
+
+.volume-slider::handle {
     background-color: var(--mauve);
     border: none;
     height: 16px;
     width: 10px;
     margin: -8px 0;
-    border-radius: 2px;  
+    border-radius: 2px;
 }
 
 .audio-menu {
-    background-color:var(--crust); 
+    background-color: var(--crust);
 }
+
 .audio-container .device {
-    background-color:transparent;
+    background-color: transparent;
     border: none;
-    padding:6px 8px 6px 4px;
+    padding: 6px 8px 6px 4px;
     margin: 2px 0;
     font-size: 12px;
     border-radius: 4px;
 }
+
 .audio-container .device.selected {
     background-color: rgba(255, 255, 255, 0.085);
 }
+
 .audio-container .device:hover {
     background-color: rgba(255, 255, 255, 0.06);
 }
@@ -539,10 +604,12 @@
 .language-widget {
     padding-left: 0;
 }
-.language-widget .widget-container{
+
+.language-widget .widget-container {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
 }
+
 .language-widget .icon {
     color: var(--mauve);
     margin-right: 4px;
@@ -554,17 +621,20 @@
     margin: 0 4px 1px 0;
     color: var(--mauve);
 }
+
 .weather-card {
-    background-color:var(--crust);
+    background-color: var(--crust);
 }
- 
+
 .weather-card-today .label {
     font-size: 12px;
 }
+
 .weather-card-today .label.location {
     font-size: 24px;
     font-weight: 700;
 }
+
 .weather-card-today .label.arert {
     font-size: 12px;
     font-weight: 700;
@@ -574,10 +644,12 @@
     border-radius: 6px;
     padding: 5px 0;
 }
+
 .weather-card-day {
     border-radius: 8px;
     background-color: var(--crust);
 }
+
 .weather-card-day .label {
     font-size: 12px;
 }
@@ -588,19 +660,23 @@
     margin: 0;
     border: none;
 }
+
 .taskbar-widget .app-icon {
     padding: 0 5px;
     border: none;
-    margin: 0;    
+    margin: 0;
 }
-.taskbar-widget .app-icon.foreground{
+
+.taskbar-widget .app-icon.foreground {
     background-color: rgba(168, 168, 168, 0.45);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 6px;
 }
+
 .taskbar-widget {
     padding-left: 0;
 }
+
 .taskbar-widget .widget-container {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
@@ -610,9 +686,11 @@
 .active-window-widget .icon {
     padding: 0 9px;
 }
+
 .active-window-widget {
     padding-right: 0;
 }
+
 .active-window-widget .widget-container {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
@@ -620,18 +698,22 @@
 
 /* HOME Settings */
 .home-widget {
-    padding: 1px;    
+    padding: 1px;
 }
+
 .home-widget .widget-container {
     background-color: var(--crust);
-    border-radius: 8px;    
+    border-radius: 8px;
 }
+
 .home-widget .icon:hover {
     color: var(--text);
 }
+
 .home-menu {
     background-color: var(--crust);
 }
+
 .home-menu .menu-item {
     padding: 8px 48px 9px 16px;
     font-size: 12px;
@@ -639,10 +721,12 @@
     color: var(--text);
     font-weight: 600;
 }
+
 .home-menu .menu-item:hover {
     background-color: rgba(157, 180, 141, 0.116);
     color: #fff;
 }
+
 .home-menu .separator {
     max-height: 1px;
     background-color: rgba(157, 180, 141, 0.116);
@@ -650,44 +734,51 @@
 
 /* MEDIA Settings */
 .media-widget {
-	padding: 0;
-	margin: 0;
+    padding: 0;
+    margin: 0;
     border-radius: 0;
 }
+
 .media-widget .label {
-	color: var(--text);
+    color: var(--text);
     padding: 0px;
-	padding-left: 8px;
-	font-size: 12px;
+    padding-left: 8px;
+    font-size: 12px;
     max-width: 220px;
     min-width: 220px;
 }
+
 .media-widget .btn {
-	color: var(--mauve);
-	padding:0 1px;
-	margin: 0;
+    color: var(--mauve);
+    padding: 0 1px;
+    margin: 0;
     font-size: 12px;
 }
+
 .media-widget .btn:hover {
-	color: #babfd3;
+    color: #babfd3;
 }
+
 .media-widget .btn.play {
-	font-size: 17px;
+    font-size: 17px;
     max-width: 22px;
     min-width: 22px;
 }
+
 .media-widget .btn.disabled:hover,
 .media-widget .btn.disabled {
-	color: var(--surface1);
+    color: var(--surface1);
 }
 
 /* NOTIFICATION Settings */
 .notification-widget .icon {
     color: var(--mauve);
 }
+
 .notification-widget .icon.new-notification {
     color: var(--mauve);
 }
+
 .notification-widget .label.new-notification {
     color: var(--mauve);
 }
@@ -696,42 +787,51 @@
 .pomodoro-widget {
     padding: 0 6px 0 6px;
 }
+
 .pomodoro-widget .icon {
     font-size: 12px;
     padding-right: 4px;
 }
+
 .pomodoro-widget .label.paused,
 .pomodoro-widget .icon.paused {
     color: #7d7e8b;
 }
+
 .pomodoro-widget .label.work,
 .pomodoro-widget .icon.work {
     color: #ffffff;
 }
+
 .pomodoro-widget .label.break,
 .pomodoro-widget .icon.break {
     color: #89b4fa;
 }
+
 /* Pomodoro menu styling */
 .pomodoro-menu {
     background-color: rgba(17, 17, 27, 0.2);
     border-radius: 8px;
 }
+
 .pomodoro-menu .header {
     font-size: 16px;
     font-weight: 600;
     max-height: 0px;
     color: #ffffff;
 }
+
 .pomodoro-menu .status {
     font-size: 18px;
     font-weight: 600;
     color: #cdd6f4;
 }
+
 .pomodoro-menu .session {
     font-size: 12px;
     color: #a6adc8;
 }
+
 .pomodoro-menu .button {
     background-color: #3f4053;
     color: #cdd6f4;
@@ -739,22 +839,28 @@
     border-radius: 4px;
     padding: 6px 12px;
 }
+
 .pomodoro-menu .button.start {
     background-color: #3f4053;
 }
+
 .pomodoro-menu .button.reset {
     background-color: #3f4053;
 }
+
 .pomodoro-menu .button:hover {
     background-color: rgba(255, 255, 255, 0.158);
 }
+
 .pomodoro-menu .button.pause {
     background-color: #ffffff;
     color: #1e1e2e;
 }
+
 .pomodoro-menu .button:pressed {
     background-color: #5a5b6e;
 }
+
 /* network traffic */
 .traffic-widget {
     padding: 0 3px -1px 3px;
@@ -764,14 +870,17 @@
     font-size: 12px;
 
 }
+
 .traffic-menu {
     background-color: var(--main);
     min-width: 300px;
 }
+
 .traffic-menu .header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     background-color: var(--main);
 }
+
 .traffic-menu .header .title {
     padding: 8px;
     font-size: 16px;
@@ -779,6 +888,7 @@
     font-family: 'Segoe UI';
     color: #ffffff
 }
+
 .traffic-menu .header .reset-button {
     font-size: 11px;
     padding: 4px 8px;
@@ -789,16 +899,19 @@
     background-color: var(--main);
     border: none;
 }
+
 .traffic-menu .reset-button:hover {
     color: #ffffff;
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .traffic-menu .reset-button:pressed {
     color: #ffffff;
     background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 /* Speed column styles */
 .traffic-menu .download-speed,
 .traffic-menu .upload-speed {
@@ -810,15 +923,18 @@
     margin-bottom: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 .traffic-menu .download-speed {
     margin-left: 12px;
     margin-right: 12px;
 }
+
 .traffic-menu .speed-separator {
     max-width: 1px;
     background-color: rgba(255, 255, 255, 0.2);
     margin: 32px 0 16px 0;
 }
+
 .traffic-menu .upload-speed-value,
 .traffic-menu .download-speed-value {
     font-size: 24px;
@@ -826,6 +942,7 @@
     font-family: 'Segoe UI';
     color: #bcc2c5;
 }
+
 .traffic-menu .upload-speed-unit,
 .traffic-menu .download-speed-unit {
     font-size: 13px;
@@ -833,6 +950,7 @@
     font-weight: 600;
     padding-top: 4px;
 }
+
 .traffic-menu .upload-speed-placeholder,
 .traffic-menu .download-speed-placeholder {
     color: #747474;
@@ -849,6 +967,7 @@
     margin-bottom: 4px;
     font-family: 'Segoe UI';
 }
+
 .traffic-menu .session-section,
 .traffic-menu .today-section,
 .traffic-menu .alltime-section {
@@ -857,6 +976,7 @@
     background-color: var(--main);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .traffic-menu .data-text {
     font-size: 13px;
     color: #afb5cc;
@@ -864,6 +984,7 @@
     font-family: 'Segoe UI';
 
 }
+
 .traffic-menu .data-value {
     font-weight: 600;
     font-size: 13px;
@@ -879,13 +1000,16 @@
     padding: 8px 0;
     font-family: 'Segoe UI';
 }
+
 .traffic-menu .internet-info {
     background-color: rgba(68, 68, 68, 0.1);
 }
+
 .traffic-menu .internet-info.connected {
     background-color: rgba(166, 227, 161, 0.096);
     color: #006eff;
 }
+
 .traffic-menu .internet-info.disconnected {
     background-color: rgba(243, 139, 168, 0.1);
     color: #f38ba8;
