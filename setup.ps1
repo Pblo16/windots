@@ -100,7 +100,7 @@ function Install-App {
                         Write-Host "[✓] $name instalado." -ForegroundColor Green
                     }
                     catch {
-                        Write-Host "[!] Error ejecutando el instalador de $name: ${_.Exception.Message}" -ForegroundColor Red
+                        Write-Host "[!] Error ejecutando el instalador de $name: $($error[0].Exception.Message)" -ForegroundColor Red
                     }
                 }
                 else {
@@ -108,7 +108,7 @@ function Install-App {
                 }
             }
             catch {
-                Write-Host "[!] Error descargando el instalador de $name: ${_.Exception.Message}" -ForegroundColor Red
+                Write-Host "[!] Error descargando el instalador de $name: $($error[0].Exception.Message)" -ForegroundColor Red
             }
         }
     }
