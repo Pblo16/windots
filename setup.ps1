@@ -55,7 +55,7 @@ function Install-App {
                 Write-Host "[✓] $name instalado." -ForegroundColor Green
             }
             catch {
-                Write-Host "[!] Error instalando $name via winget: $($_ | Out-String)" -ForegroundColor Red
+                Write-Host "[!] Error instalando $name via winget:" -ForegroundColor Red
             }
         }
         "exe" {
@@ -69,15 +69,15 @@ function Install-App {
                         Write-Host "[✓] $name instalado." -ForegroundColor Green
                     }
                     catch {
-                        Write-Host "[!] Error ejecutando el instalador de $name: $($_ | Out-String)" -ForegroundColor Red
+                        Write-Host "[!] Error ejecutando el instalador " -ForegroundColor Red
                     }
                 }
                 else {
-                    Write-Host "[!] No se pudo descargar el instalador de $name desde $url" -ForegroundColor Red
+                    Write-Host "[!] No se pudo descargar el instalador desde $url" -ForegroundColor Red
                 }
             }
             catch {
-                Write-Host "[!] Error descargando el instalador de $name: $($_ | Out-String)" -ForegroundColor Red
+                Write-Host "[!] Error descargando el instalador " -ForegroundColor Red
             }
         }
     }
@@ -140,7 +140,7 @@ function Invoke-RepoScripts {
         }
     }
     catch {
-        Write-Host "[!] Error ejecutando scripts del repo: $($_ | Out-String)" -ForegroundColor Red
+        Write-Host "[!] Error ejecutando scripts del repo:" -ForegroundColor Red
     }
 }
 Invoke-RepoScripts
@@ -169,7 +169,7 @@ function Get-GitHubFolder {
         }
     }
     catch {
-        Write-Host "[!] Error descargando $folder: $($_ | Out-String)" -ForegroundColor Red
+        Write-Host "[!] Error descargando $folder" -ForegroundColor Red
     }
 }
 
