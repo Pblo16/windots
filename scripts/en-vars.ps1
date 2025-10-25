@@ -1,8 +1,10 @@
 # env-vars.ps1
 # Define aquí tus variables de entorno personalizadas
 
+
+$warpPath = Join-Path $env:USERPROFILE "AppData\Local\Programs\Warp"
 $customEnvVars = @{
-  "Path" = $env:Path + ";$env:USERPROFILE\AppData\Local\Programs\Warp"
+  "Path" = if ($env:Path) { $env:Path + ";" + $warpPath } else { $warpPath }
 }
 
 # Exportar variables
