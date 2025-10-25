@@ -132,17 +132,19 @@ if ($usarWSL -eq "y") {
 
 # Ejecutar variables de entorno personalizadas desde el repo clonado
 try {
-    $enVarsScript = Join-Path $repoPath "scripts\en-vars.ps1"
-    if (Test-Path $enVarsScript) {
-        Write-Host "[+] Configurando variables de entorno personalizadas..." -ForegroundColor Cyan
-        powershell -ExecutionPolicy Bypass -File $enVarsScript
+    $warpPath = Join-Path $env:USERPROFILE "AppData\Local\Programs\Warp"
+    $customEnvVars = @{
+        "Path" = if ($env:Path) { $env:Path + ";" + $warpPath } else { $warpPath }
     }
-    else {
-        Write-Host "[!] No se encontró $enVarsScript" -ForegroundColor Yellow
+    # Exportar variables
+    foreach ($key in $customEnvVars.Keys) {
+        [Environment]::SetEnvironmentVariable($key, $customEnvVars[$key], "User")
+        Write-Host "[+] Variable de entorno configurada: $key" -ForegroundColor Cyan
     }
+
 }
 catch {
-    Write-Host "[!] Error ejecutando en-vars.ps1: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "[!] Error ejecutando en-vars" -ForegroundColor Red
 }
 
 Write-Host ""
