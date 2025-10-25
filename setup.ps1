@@ -110,16 +110,34 @@ Copy-Item "$repoPath\glazewm\*" $glazeConfig -Recurse -Force
 Write-Host "[✓] Configuraciones copiadas correctamente." -ForegroundColor Green
 
 # WSL
-Write-Host "[+] Revisando WSL..." -ForegroundColor Cyan
-$wslStatus = wsl --status 2>$null
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "[+] Instalando WSL2 con Ubuntu..." -ForegroundColor Cyan
-    wsl --install -d Ubuntu
-}
-else { Write-Host "[✓] WSL ya está instalado." -ForegroundColor Green }
+$usarWSL = Read-Host "[?] ¿Quieres usar WSL? (y/n)"
+if ($usarWSL -eq "y") {   
+    Write-Host "[+] Revisando WSL..." -ForegroundColor Cyan
+    $wslStatus = wsl --status 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[+] Instalando WSL2 con Ubuntu..." -ForegroundColor Cyan
+        wsl --install -d Ubuntu
+    }
+    else { Write-Host "[✓] WSL ya está instalado." -ForegroundColor Green }
 
-Write-Host "[+] Ejecutando setup dentro de Ubuntu..." -ForegroundColor Cyan
-wsl -d Ubuntu -e bash -c "curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh && chmod +x install.sh && bash install.sh"
+    Write-Host "[+] Ejecutando setup dentro de Ubuntu..." -ForegroundColor Cyan
+    wsl -d Ubuntu -e bash -c "curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh && chmod +x install.sh && bash install.sh"
+}
+
+# Ejecutar variables de entorno personalizadas
+try {
+    $enVarsScript = Join-Path $PSScriptRoot "scripts\en-vars.ps1"
+    if (Test-Path $enVarsScript) {
+        Write-Host "[+] Configurando variables de entorno personalizadas..." -ForegroundColor Cyan
+        powershell -ExecutionPolicy Bypass -File $enVarsScript
+    }
+    else {
+        Write-Host "[!] No se encontró scripts/en-vars.ps1" -ForegroundColor Yellow
+    }
+}
+catch {
+    Write-Host "[!] Error ejecutando en-vars.ps1: $($PSItem.Exception.Message)" -ForegroundColor Red
+}
 
 Write-Host ""
 Write-Host "✅ Instalación completa. Reinicia el sistema para aplicar los cambios." -ForegroundColor Green
