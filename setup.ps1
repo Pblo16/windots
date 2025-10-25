@@ -1,6 +1,7 @@
 # Windows Setup Script by Pablo
 # Ejecutar con PowerShell (Admin si es posible)
 
+Write-Host "=== Windows Setup Script by Pablo v 1.0 ===" -ForegroundColor Green
 function Show-Menu {
     param (
         [string]$Title,
