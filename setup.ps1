@@ -37,7 +37,7 @@ function Install-App {
     Write-Host "`n[+] Instalando $name..." -ForegroundColor Cyan
     if ($type -eq "winget") {
         try { winget install --id=$id -e --accept-source-agreements --accept-package-agreements -h | Out-Null; Write-Host "[✓] $name instalado." -ForegroundColor Green }
-        catch { Write-Host "[!] Error instalando $name: $($_.Exception.Message)" -ForegroundColor Red }
+        catch { Write-Host "[!] Error instalando $name: ${($_.Exception.Message)}" -ForegroundColor Red }
     }
     elseif ($type -eq "exe") {
         try {
@@ -49,7 +49,7 @@ function Install-App {
             }
             else { Write-Host "[!] No se pudo descargar $name" -ForegroundColor Red }
         }
-        catch { Write-Host "[!] Error descargando $name: $($_.Exception.Message)" -ForegroundColor Red }
+        catch { Write-Host "[!] Error descargando $name: ${($_.Exception.Message)}" -ForegroundColor Red }
     }
 }
 
@@ -103,7 +103,7 @@ function Invoke-RepoScripts {
         $url = "$repoScriptsBase$s"
         Write-Host "[~] Ejecutando $s..." -ForegroundColor Cyan
         try { Invoke-Expression (Invoke-WebRequest -Uri $url -UseBasicParsing).Content }
-        catch { Write-Host "[!] Error ejecutando $s: $($_.Exception.Message)" -ForegroundColor Red }
+        catch { Write-Host "[!] Error ejecutando $s: ${($_.Exception.Message)}" -ForegroundColor Red }
     }
 }
 Invoke-RepoScripts
@@ -123,7 +123,7 @@ function Get-GitHubFolder {
             }
         }
     }
-    catch { Write-Host "[!] Error descargando $folder: $($_.Exception.Message)" -ForegroundColor Red }
+    catch { Write-Host "[!] Error descargando $folder: ${($_.Exception.Message)}" -ForegroundColor Red }
 }
 
 $yasbDir = "$env:USERPROFILE\.config\yasb"
