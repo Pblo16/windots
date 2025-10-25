@@ -1,15 +1,14 @@
 # ===============================
 # Windows Setup Script by Pablo
-# Autoactualizable + Interactivo
+# Compatible PS5.1 (Windows PowerShell)
 # ===============================
+$ErrorActionPreference = "Stop"
 
-# --- Configuración de URLs ---
-$repoSetupUrl = "https://raw.githubusercontent.com/Pblo16/windots/main/setup.ps1"
 $repoScriptsBase = "https://raw.githubusercontent.com/Pblo16/windots/main/scripts/"
 $tempDir = "$env:TEMP\windots"
+if (-not (Test-Path $tempDir)) { New-Item -ItemType Directory -Force -Path $tempDir | Out-Null }
 
-# --- Requiere Admin ---
-function Test-AdminPrivileges {
+function Test-Admin {
     $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     if (-not $isAdmin) {
         if ($MyInvocation.MyCommand.Path) {
@@ -17,95 +16,64 @@ function Test-AdminPrivileges {
             Start-Process powershell "-ExecutionPolicy Bypass -File `"$MyInvocation.MyCommand.Path`"" -Verb RunAs
         }
         else {
-            Write-Host "[!] No se puede relanzar desde iwr | iex. Ejecuta PowerShell como administrador manualmente." -ForegroundColor Red
+            Write-Host "[!] Ejecuta PowerShell como administrador manualmente." -ForegroundColor Red
         }
         exit
     }
 }
-Test-AdminPrivileges
+Test-Admin
 
 # --- Winget ---
-function Install-Winget {
-    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-        Write-Host "[+] Instalando Winget..." -ForegroundColor Cyan
-        Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile "$env:TEMP\Microsoft.DesktopAppInstaller.msixbundle"
-        Add-AppxPackage "$env:TEMP\Microsoft.DesktopAppInstaller.msixbundle"
-    }
-    else {
-        Write-Host "[✓] Winget ya está instalado." -ForegroundColor Green
-    }
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+    Write-Host "[+] Instalando Winget..." -ForegroundColor Cyan
+    Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile "$env:TEMP\Microsoft.DesktopAppInstaller.msixbundle" -UseBasicParsing
+    Add-AppxPackage "$env:TEMP\Microsoft.DesktopAppInstaller.msixbundle"
 }
-Install-Winget
+else { Write-Host "[✓] Winget ya está instalado." -ForegroundColor Green }
 
-# --- Instalador universal ---
+# --- Función universal ---
 function Install-App {
-    param (
-        [string]$id = "",
-        [string]$name,
-        [string]$type = "winget", # winget | exe
-        [string]$url = ""
-    )
-
+    param([string]$id, [string]$name, [string]$type = "winget", [string]$url = "")
     Write-Host "`n[+] Instalando $name..." -ForegroundColor Cyan
-
-    switch ($type) {
-        "winget" {
-            try {
-                winget install --id=$id -e --accept-source-agreements --accept-package-agreements -h | Out-Null
+    if ($type -eq "winget") {
+        try { winget install --id=$id -e --accept-source-agreements --accept-package-agreements -h | Out-Null; Write-Host "[✓] $name instalado." -ForegroundColor Green }
+        catch { Write-Host "[!] Error instalando $name: $($_.Exception.Message)" -ForegroundColor Red }
+    }
+    elseif ($type -eq "exe") {
+        try {
+            $installer = Join-Path $tempDir "$name.exe"
+            Invoke-WebRequest -Uri $url -OutFile $installer -UseBasicParsing
+            if (Test-Path $installer) {
+                Start-Process -FilePath $installer -ArgumentList "/silent", "/verysilent", "/norestart" -Wait
                 Write-Host "[✓] $name instalado." -ForegroundColor Green
             }
-            catch {
-                Write-Host "[!] Error instalando $name via winget:" -ForegroundColor Red
-            }
+            else { Write-Host "[!] No se pudo descargar $name" -ForegroundColor Red }
         }
-        "exe" {
-            try {
-                $installerPath = Join-Path $tempDir "$name.exe"
-                Invoke-WebRequest -Uri $url -OutFile $installerPath -UseBasicParsing
-                if (Test-Path $installerPath) {
-                    Write-Host "[~] Instalador descargado: $installerPath" -ForegroundColor Cyan
-                    try {
-                        Start-Process -FilePath $installerPath -ArgumentList "/silent", "/verysilent", "/norestart" -Wait
-                        Write-Host "[✓] $name instalado." -ForegroundColor Green
-                    }
-                    catch {
-                        Write-Host "[!] Error ejecutando el instalador " -ForegroundColor Red
-                    }
-                }
-                else {
-                    Write-Host "[!] No se pudo descargar el instalador desde $url" -ForegroundColor Red
-                }
-            }
-            catch {
-                Write-Host "[!] Error descargando el instalador " -ForegroundColor Red
-            }
-        }
+        catch { Write-Host "[!] Error descargando $name: $($_.Exception.Message)" -ForegroundColor Red }
     }
 }
 
-# --- Listado de apps ---
+# --- Apps ---
 $apps = @{
     winget = @(
         @{ id = "Flow-Launcher.Flow-Launcher"; name = "Flow Launcher" },
         @{ id = "Zen-Team.Zen-Browser"; name = "Zen Browser" },
         @{ id = "Warp.Warp"; name = "Warp Terminal" },
         @{ id = "Git.Git"; name = "Git" },
-        @{ id = "Docker.DockerDesktop"; name = "Docker Desktop"; optional = $true },
-        @{ id = "Microsoft.VisualStudioCode"; name = "VSCode"; optional = $true }
+        @{ id = "Microsoft.VisualStudioCode"; name = "VSCode"; optional = $true },
+        @{ id = "Docker.DockerDesktop"; name = "Docker Desktop"; optional = $true }
     )
     exe    = @(
         @{ name = "FilePilot"; url = "http://filepilot.tech/download/latest" }
     )
 }
 
-# --- Tipo de usuario ---
-$tipoUsuario = Read-Host "[?] ¿Este equipo es para DESARROLLADOR o CASUAL? (dev/casual)"
+$tipoUsuario = Read-Host "[?] Este equipo es para DESARROLLADOR o CASUAL? (dev/casual)"
 
-# --- Instalación interactiva ---
 foreach ($app in $apps.winget) {
     if ($app.ContainsKey("optional") -and $tipoUsuario -eq "casual") { continue }
-    if ($app.optional) {
-        $resp = Read-Host "[?] ¿Deseas instalar $($app.name)? (y/n)"
+    if ($app.ContainsKey("optional") -and $app.optional) {
+        $resp = Read-Host "[?] Deseas instalar $($app.name)? (y/n)"
         if ($resp -ne "y") { continue }
     }
     Install-App -id $app.id -name $app.name -type "winget"
@@ -116,10 +84,9 @@ foreach ($app in $apps.exe) {
 }
 
 # --- GlazeWM ---
-$usarGlaze = Read-Host "[?] ¿Quieres usar GlazeWM (tiling manager)? (y/n)"
+$usarGlaze = Read-Host "[?] Quieres usar GlazeWM (tiling manager)? (y/n)"
 if ($usarGlaze -eq "y") {
     Install-App -id "glzr-io.glazewm" -name "GlazeWM" -type "winget"
-    Write-Host "[+] Configurando inicio automático GlazeWM..." -ForegroundColor Cyan
     $taskName = "GlazeWM AutoStart"
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
     $glazePath = "$env:ProgramFiles\glzr.io\GlazeWM\glazewm.exe"
@@ -131,71 +98,49 @@ if ($usarGlaze -eq "y") {
 # --- Scripts del repo ---
 function Invoke-RepoScripts {
     Write-Host "[+] Ejecutando scripts desde repo..." -ForegroundColor Cyan
-    try {
-        $scriptList = @("env-vars.ps1")  # añadir más scripts si quieres
-        foreach ($s in $scriptList | Sort-Object) {
-            $url = "$repoScriptsBase$s"
-            Write-Host "[~] Ejecutando $s..." -ForegroundColor Cyan
-            Invoke-Expression (Invoke-WebRequest -UseBasicParsing $url).Content
-        }
-    }
-    catch {
-        Write-Host "[!] Error ejecutando scripts del repo:" -ForegroundColor Red
+    $scripts = @("env-vars.ps1")
+    foreach ($s in $scripts) {
+        $url = "$repoScriptsBase$s"
+        Write-Host "[~] Ejecutando $s..." -ForegroundColor Cyan
+        try { Invoke-Expression (Invoke-WebRequest -Uri $url -UseBasicParsing).Content }
+        catch { Write-Host "[!] Error ejecutando $s: $($_.Exception.Message)" -ForegroundColor Red }
     }
 }
 Invoke-RepoScripts
 
-# --- Descargar carpetas GitHub sin git ---
+# --- Descarga carpetas sin git ---
 function Get-GitHubFolder {
-    param(
-        [string]$user = "Pblo16",
-        [string]$repo = "windots",
-        [string]$branch = "main",
-        [string]$folder = "", # ej: yasb o glazewm
-        [string]$dest = ""
-    )
-
-    $apiUrl = "https://api.github.com/repos/$user/$repo/contents/$folder?ref=$branch"
-    Write-Host "[~] Descargando archivos de $folder..." -ForegroundColor Cyan
+    param([string]$folder, [string]$dest)
+    $api = "https://api.github.com/repos/Pblo16/windots/contents/$folder?ref=main"
+    Write-Host "[~] Descargando $folder..." -ForegroundColor Cyan
     try {
-        $files = Invoke-RestMethod -Uri $apiUrl -Headers @{ "User-Agent" = "PowerShell" }
-        foreach ($file in $files) {
-            if ($file.type -eq "file") {
-                $rawUrl = $file.download_url
-                $destPath = Join-Path $dest $file.name
-                Invoke-WebRequest -Uri $rawUrl -OutFile $destPath -UseBasicParsing
-                Write-Host "    [+] $($file.name) descargado." -ForegroundColor Green
+        $files = Invoke-RestMethod -Uri $api -Headers @{ "User-Agent" = "PowerShell" }
+        foreach ($f in $files) {
+            if ($f.type -eq "file") {
+                $destPath = Join-Path $dest $f.name
+                Invoke-WebRequest -Uri $f.download_url -OutFile $destPath -UseBasicParsing
+                Write-Host "    [+] $($f.name) descargado" -ForegroundColor Green
             }
         }
     }
-    catch {
-        Write-Host "[!] Error descargando $folder" -ForegroundColor Red
-    }
+    catch { Write-Host "[!] Error descargando $folder: $($_.Exception.Message)" -ForegroundColor Red }
 }
 
-# --- Configuraciones locales ---
-$yasbConfig = "$env:USERPROFILE\.config\yasb"
-$glazeConfig = "$env:USERPROFILE\.glzr\glazewm"
-New-Item -ItemType Directory -Force -Path $yasbConfig | Out-Null
-New-Item -ItemType Directory -Force -Path $glazeConfig | Out-Null
-Get-GitHubFolder -folder "yasb" -dest $yasbConfig
-Get-GitHubFolder -folder "glazewm" -dest $glazeConfig
+$yasbDir = "$env:USERPROFILE\.config\yasb"
+$glazeDir = "$env:USERPROFILE\.glzr\glazewm"
+New-Item -ItemType Directory -Force -Path $yasbDir | Out-Null
+New-Item -ItemType Directory -Force -Path $glazeDir | Out-Null
 
-# --- WSL y Bash ---
-$usarWSL = Read-Host "[?] ¿Quieres usar WSL? (y/n)"
+Get-GitHubFolder -folder "yasb" -dest $yasbDir
+Get-GitHubFolder -folder "glazewm" -dest $glazeDir
+
+# --- WSL ---
+$usarWSL = Read-Host "[?] Quieres usar WSL? (y/n)"
 if ($usarWSL -eq "y") {
-    Write-Host "[+] Revisando WSL..." -ForegroundColor Cyan
     wsl --status 2>$null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "[+] Instalando WSL2 con Ubuntu..." -ForegroundColor Cyan
-        wsl --install -d Ubuntu
-    }
-    else {
-        Write-Host "[✓] WSL ya instalado." -ForegroundColor Green
-    }
-
-    Write-Host "[+] Ejecutando install.sh dentro de Ubuntu..." -ForegroundColor Cyan
-    wsl -d Ubuntu -e bash -c 'curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh; chmod +x install.sh; bash install.sh'
+    if ($LASTEXITCODE -ne 0) { wsl --install -d Ubuntu }
+    Write-Host "[+] Ejecutando install.sh en Ubuntu..." -ForegroundColor Cyan
+    wsl -d Ubuntu -e bash -c "curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh; chmod +x install.sh; bash install.sh"
 }
 
-Write-Host "`n✅ Instalación completa. Reinicia el sistema para aplicar los cambios." -ForegroundColor Green
+Write-Host "`n✅ Instalación completa. Reinicia el sistema." -ForegroundColor Green
