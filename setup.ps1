@@ -47,14 +47,14 @@ function Install-Downloadable {
 $commonApps = @(
     @{Id = "Flow-Launcher.Flow-Launcher"; Name = "Flow Launcher" },
     @{Id = "Zen-Team.Zen-Browser"; Name = "Zen Browser" },
-    @{Id = "Warp.Warp"; Name = "Warp Terminal" },
     @{Id = "MacroDeck.MacroDeck"; Name = "Macro Deck" },
     @{Id = "AmN.yasb"; Name = "YASB (Yet Another Status Bar)" }
 )
 
 $devApps = @(
     @{Id = "Git.Git"; Name = "Git" },
-    @{Id = "Schniz.fnm"; Name = "Fast Node Manager" }
+    @{Id = "Schniz.fnm"; Name = "Fast Node Manager" },
+    @{Id = "Warp.Warp"; Name = "Warp Terminal" }
 )
 
 $editors = @{
@@ -129,20 +129,20 @@ if ($usarWSL -eq "y") {
     wsl -d Ubuntu -e bash -c "curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh && chmod +x install.sh && bash install.sh"
 }
 
-# Ejecutar variables de entorno personalizadas
-try {
-    $enVarsScript = if ($PSScriptRoot) { Join-Path $PSScriptRoot "scripts\en-vars.ps1" } else { "" }
 
-    if ($enVarsScript -and (Test-Path $enVarsScript)) {
+# Ejecutar variables de entorno personalizadas desde el repo clonado
+try {
+    $enVarsScript = Join-Path $repoPath "scripts\en-vars.ps1"
+    if (Test-Path $enVarsScript) {
         Write-Host "[+] Configurando variables de entorno personalizadas..." -ForegroundColor Cyan
         powershell -ExecutionPolicy Bypass -File $enVarsScript
     }
     else {
-        Write-Host "[!] No se encontró scripts/en-vars.ps1 o el script no se ejecuta desde un archivo .ps1" -ForegroundColor Yellow
+        Write-Host "[!] No se encontró $enVarsScript" -ForegroundColor Yellow
     }
 }
 catch {
-    Write-Host "[!] Error ejecutando en-vars.ps1: $($PSItem.Exception.Message)" -ForegroundColor Red
+    Write-Host "[!] Error ejecutando en-vars.ps1: $($_.Exception.Message)" -ForegroundColor Red
 }
 
 Write-Host ""
