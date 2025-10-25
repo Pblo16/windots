@@ -40,11 +40,17 @@ AutoUpdate
 function Require-Admin {
     $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     if (-not $isAdmin) {
-        Write-Host "[!] Reiniciando como administrador..." -ForegroundColor Yellow
-        Start-Process powershell "-ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+        if ($MyInvocation.MyCommand.Path) {
+            Write-Host "[!] Reiniciando como administrador..." -ForegroundColor Yellow
+            Start-Process powershell "-ExecutionPolicy Bypass -File `"$MyInvocation.MyCommand.Path`"" -Verb RunAs
+        }
+        else {
+            Write-Host "[!] No se puede relanzar desde iwr | iex. Ejecuta PowerShell como administrador manualmente." -ForegroundColor Red
+        }
         exit
     }
 }
+
 
 Require-Admin
 
@@ -186,7 +192,7 @@ function Download-GitHubFolder {
         }
     }
     catch {
-        Write-Host "[!] Error descargando $folder: $_" -ForegroundColor Red
+        Write-Host ("[!] Error descargando {0}: {1}" -f $folder, $_) -ForegroundColor Red
     }
 }
 
@@ -217,8 +223,7 @@ if ($usarWSL -eq "y") {
     }
 
     Write-Host "[+] Ejecutando install.sh dentro de Ubuntu..." -ForegroundColor Cyan
-    wsl -d Ubuntu -e bash -c "curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh && chmod +x install.sh && bash install.sh"
-
+    wsl -d Ubuntu -e bash -c "curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh; chmod +x install.sh; bash install.sh"
 }
 Write-Host ""
 Write-Host "✅ Instalación completa. Reinicia el sistema para aplicar los cambios." -ForegroundColor Green
