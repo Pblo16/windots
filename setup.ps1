@@ -25,17 +25,55 @@ function Install-Winget {
 
 Install-Winget
 
-$tipoUsuario = Read-Host "[?] ¿Vas a usar este equipo como DESARROLLADOR o CASUAL? (dev/casual)"
-
 function Install-App {
     param ($id, $name)
     Write-Host "[+] Instalando $name..." -ForegroundColor Cyan
     winget install --id=$id -e --accept-source-agreements --accept-package-agreements | Out-Null
 }
 
-Install-App "Flow-Launcher.Flow-Launcher" "Flow Launcher"
-Install-App "Zen-Team.Zen-Browser" "Zen Browser"
-Install-App "Warp.Warp" "Warp Terminal"
+function Install-Downloadable {
+    param ($url, $name, $dest = "$env:TEMP\$name.exe")
+    Write-Host "[+] Descargando e instalando $name..." -ForegroundColor Cyan
+    Invoke-WebRequest -Uri $url -OutFile $dest
+    Start-Process $dest -Wait
+}
+
+# Configuración de apps
+$commonApps = @(
+    @{Id = "Flow-Launcher.Flow-Launcher"; Name = "Flow Launcher" },
+    @{Id = "Zen-Team.Zen-Browser"; Name = "Zen Browser" },
+    @{Id = "Warp.Warp"; Name = "Warp Terminal" },
+    @{Id = "MacroDeck.MacroDeck"; Name = "Macro Deck" },
+    @{Id = "AmN.yasb"; Name = "YASB (Yet Another Status Bar)" }
+)
+
+$devApps = @(
+    @{Id = "Git.Git"; Name = "Git" },
+    @{Id = "Schniz.fnm"; Name = "Fast Node Manager" }
+)
+
+$editors = @{
+    "VisualStudioCode" = @{Id = "Microsoft.VisualStudioCode"; Name = "VisualStudioCode" }
+    "zed"              = @{Id = "ZedIndustries.Zed"; Name = "Zed" }
+}
+
+$downloadables = @(
+    @{Url = "http://filepilot.tech/download/latest"; Name = "FilePilot" }
+)
+
+$tipoUsuario = Read-Host "[?] ¿Vas a usar este equipo como DESARROLLADOR o CASUAL? (dev/casual)"
+
+foreach ($app in $commonApps) { Install-App $app.Id $app.Name }
+
+if ($tipoUsuario -eq "dev") {
+    $editor = Read-Host "[?] ¿Prefieres usar VisualStudioCode o Zed? (VisualStudioCode/zed)"
+    Install-App $editors[$editor].Id $editors[$editor].Name
+
+    foreach ($app in $devApps) { Install-App $app.Id $app.Name }
+
+    $usarDocker = Read-Host "[?] ¿Vas a usar Docker? (y/n)"
+    if ($usarDocker -eq "y") { Install-App "Docker.DockerDesktop" "Docker Desktop" }
+}
 
 $usarGlaze = Read-Host "[?] ¿Quieres usar el Tiling Manager GlazeWM? (y/n)"
 if ($usarGlaze -eq "y") {
@@ -49,37 +87,12 @@ if ($usarGlaze -eq "y") {
     Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -Description "Auto-start GlazeWM at login" | Out-Null
 }
 
-Install-App "AmN.yasb" "YASB (Yet Another Status Bar)"
-
-if ($tipoUsuario -eq "dev") {
-    $editor = Read-Host "[?] ¿Prefieres usar VSCodium o Zed? (vscodium/zed)"
-    if ($editor -eq "vscodium") {
-        Install-App "VSCodium.VSCodium" "VSCodium"
-    }
-    else {
-        Install-App "ZedIndustries.Zed" "Zed"
-    }
-
-    Install-App "MacroDeck.MacroDeck" "Macro Deck"
-    Install-App "Git.Git" "Git"
-    Install-App "Schniz.fnm" "Fast Node Manager"
-
-    $usarDocker = Read-Host "[?] ¿Vas a usar Docker? (y/n)"
-    if ($usarDocker -eq "y") {
-        Install-App "Docker.DockerDesktop" "Docker Desktop"
-    }
-}
-
 $esAsus = Read-Host "[?] ¿Tu equipo es ASUS? (y/n)"
-if ($esAsus -eq "y") {
-    Install-App "seerge.g-helper" "G-Helper para ASUS"
-}
+if ($esAsus -eq "y") { Install-App "seerge.g-helper" "G-Helper para ASUS" }
 
-Write-Host "[+] Descargando e instalando FilePilot..." -ForegroundColor Cyan
-$filePilot = "$env:TEMP\FilePilotInstaller.exe"
-Invoke-WebRequest -Uri "http://filepilot.tech/download/latest" -OutFile $filePilot
-Start-Process $filePilot -Wait
+foreach ($dl in $downloadables) { Install-Downloadable $dl.Url $dl.Name }
 
+# Configs
 Write-Host "[+] Clonando configuraciones de Windows..." -ForegroundColor Cyan
 $repoPath = "$env:TEMP\windots"
 if (Test-Path $repoPath) { Remove-Item -Recurse -Force $repoPath }
@@ -96,15 +109,14 @@ Copy-Item "$repoPath\glazewm\*" $glazeConfig -Recurse -Force
 
 Write-Host "[✓] Configuraciones copiadas correctamente." -ForegroundColor Green
 
+# WSL
 Write-Host "[+] Revisando WSL..." -ForegroundColor Cyan
 $wslStatus = wsl --status 2>$null
 if ($LASTEXITCODE -ne 0) {
     Write-Host "[+] Instalando WSL2 con Ubuntu..." -ForegroundColor Cyan
     wsl --install -d Ubuntu
 }
-else {
-    Write-Host "[✓] WSL ya está instalado." -ForegroundColor Green
-}
+else { Write-Host "[✓] WSL ya está instalado." -ForegroundColor Green }
 
 Write-Host "[+] Ejecutando setup dentro de Ubuntu..." -ForegroundColor Cyan
 wsl -d Ubuntu -e bash -c "curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh && chmod +x install.sh && bash install.sh"
