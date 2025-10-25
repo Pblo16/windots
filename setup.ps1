@@ -34,8 +34,13 @@ function Install-App {
 function Install-Downloadable {
     param ($url, $name, $dest = "$env:TEMP\$name.exe")
     Write-Host "[+] Descargando e instalando $name..." -ForegroundColor Cyan
-    Invoke-WebRequest -Uri $url -OutFile $dest
-    Start-Process $dest -Wait
+    try {
+        $response = Invoke-WebRequest -Uri $url -MaximumRedirection 5 -OutFile $dest
+        Start-Process $dest -Wait
+    }
+    catch {
+        Write-Host "[!] Error descargando $name: $($PSItem.Exception.Message)" -ForegroundColor Red
+    }
 }
 
 # Configuración de apps
