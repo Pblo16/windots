@@ -123,7 +123,7 @@ $tipoUsuario = Read-Host "[?] ¿Este equipo es para DESARROLLADOR o CASUAL? (dev
 
 # --- Instalación interactiva ---
 foreach ($app in $apps.winget) {
-    if ($app.PSContainsKey("optional") -and $tipoUsuario -eq "casual") { continue }
+    if ($app.ContainsKey("optional") -and $tipoUsuario -eq "casual") { continue }
     if ($app.optional) {
         $resp = Read-Host "[?] ¿Deseas instalar $($app.name)? (y/n)"
         if ($resp -ne "y") { continue }
