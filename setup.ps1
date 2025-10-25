@@ -8,34 +8,6 @@ $repoSetupUrl = "https://raw.githubusercontent.com/Pblo16/windots/main/setup.ps1
 $repoScriptsBase = "https://raw.githubusercontent.com/Pblo16/windots/main/scripts/"
 $tempDir = "$env:TEMP\windots"
 
-# --- Autoactualización ---
-# function AutoUpdate {
-#     Write-Host "[~] Verificando actualización del instalador..." -ForegroundColor Cyan
-#     try {
-#         $tempSetup = "$tempDir\setup-latest.ps1"
-#         New-Item -ItemType Directory -Force -Path $tempDir | Out-Null
-#         Invoke-WebRequest -Uri $repoSetupUrl -OutFile $tempSetup -UseBasicParsing
-#         if (Test-Path $PSCommandPath) {
-#             $localHash = Get-FileHash $PSCommandPath
-#             $remoteHash = Get-FileHash $tempSetup
-#             if ($localHash.Hash -ne $remoteHash.Hash) {
-#                 Write-Host "[↑] Nueva versión detectada. Ejecutando actualizada..." -ForegroundColor Yellow
-#                 Copy-Item $tempSetup $PSCommandPath -Force
-#                 Start-Process powershell "-ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
-#                 exit
-#             }
-#             else {
-#                 Write-Host "[✓] Ya tienes la última versión." -ForegroundColor Green
-#             }
-#         }
-#     }
-#     catch {
-#         Write-Host "[!] No se pudo verificar actualización, usando versión local." -ForegroundColor Yellow
-#     }
-# }
-
-# AutoUpdate
-
 # --- Requiere Admin ---
 function Test-AdminPrivileges {
     $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
@@ -50,8 +22,6 @@ function Test-AdminPrivileges {
         exit
     }
 }
-
-
 Test-AdminPrivileges
 
 # --- Winget ---
@@ -65,7 +35,6 @@ function Install-Winget {
         Write-Host "[✓] Winget ya está instalado." -ForegroundColor Green
     }
 }
-
 Install-Winget
 
 # --- Instalador universal ---
@@ -86,12 +55,12 @@ function Install-App {
                 Write-Host "[✓] $name instalado." -ForegroundColor Green
             }
             catch {
-                Write-Host "[!] Error instalando $name via winget." -ForegroundColor Red
+                Write-Host "[!] Error instalando $name via winget: $($_ | Out-String)" -ForegroundColor Red
             }
         }
         "exe" {
             try {
-                $installerPath = "$tempDir\$name.exe"
+                $installerPath = Join-Path $tempDir "$name.exe"
                 Invoke-WebRequest -Uri $url -OutFile $installerPath -UseBasicParsing
                 if (Test-Path $installerPath) {
                     Write-Host "[~] Instalador descargado: $installerPath" -ForegroundColor Cyan
@@ -100,7 +69,7 @@ function Install-App {
                         Write-Host "[✓] $name instalado." -ForegroundColor Green
                     }
                     catch {
-                        Write-Host "[!] Error ejecutando el instalador de $name: $($PSItem.Exception.Message)" -ForegroundColor Red
+                        Write-Host "[!] Error ejecutando el instalador de $name: $($_ | Out-String)" -ForegroundColor Red
                     }
                 }
                 else {
@@ -108,7 +77,7 @@ function Install-App {
                 }
             }
             catch {
-                Write-Host "[!] Error descargando el instalador de $name: $($PSItem.Exception.Message)" -ForegroundColor Red
+                Write-Host "[!] Error descargando el instalador de $name: $($_ | Out-String)" -ForegroundColor Red
             }
         }
     }
@@ -163,9 +132,7 @@ if ($usarGlaze -eq "y") {
 function Invoke-RepoScripts {
     Write-Host "[+] Ejecutando scripts desde repo..." -ForegroundColor Cyan
     try {
-        $scriptList = @(
-            "env-vars.ps1"  # puedes añadir más scripts aquí o detectarlos dinámicamente desde GitHub
-        )
+        $scriptList = @("env-vars.ps1")  # añadir más scripts si quieres
         foreach ($s in $scriptList | Sort-Object) {
             $url = "$repoScriptsBase$s"
             Write-Host "[~] Ejecutando $s..." -ForegroundColor Cyan
@@ -173,24 +140,23 @@ function Invoke-RepoScripts {
         }
     }
     catch {
-        Write-Host "[!] Error ejecutando scripts del repo." -ForegroundColor Red
+        Write-Host "[!] Error ejecutando scripts del repo: $($_ | Out-String)" -ForegroundColor Red
     }
 }
-
 Invoke-RepoScripts
 
+# --- Descargar carpetas GitHub sin git ---
 function Get-GitHubFolder {
     param(
         [string]$user = "Pblo16",
         [string]$repo = "windots",
         [string]$branch = "main",
-        [string]$folder = "",           # ej: "yasb" o "glazewm"
+        [string]$folder = "", # ej: yasb o glazewm
         [string]$dest = ""
     )
 
     $apiUrl = "https://api.github.com/repos/$user/$repo/contents/$folder?ref=$branch"
     Write-Host "[~] Descargando archivos de $folder..." -ForegroundColor Cyan
-
     try {
         $files = Invoke-RestMethod -Uri $apiUrl -Headers @{ "User-Agent" = "PowerShell" }
         foreach ($file in $files) {
@@ -203,27 +169,21 @@ function Get-GitHubFolder {
         }
     }
     catch {
-        $errorMsg = $PSItem.ToString()
-        Write-Host "[!] Error descargando $folder`: $errorMsg" -ForegroundColor Red
+        Write-Host "[!] Error descargando $folder: $($_ | Out-String)" -ForegroundColor Red
     }
 }
 
-# --- Uso ---
+# --- Configuraciones locales ---
 $yasbConfig = "$env:USERPROFILE\.config\yasb"
 $glazeConfig = "$env:USERPROFILE\.glzr\glazewm"
 New-Item -ItemType Directory -Force -Path $yasbConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $glazeConfig | Out-Null
-
 Get-GitHubFolder -folder "yasb" -dest $yasbConfig
 Get-GitHubFolder -folder "glazewm" -dest $glazeConfig
 
-
-# Aquí puedes añadir lógica para descargar todos los archivos de esas carpetas (iwr + SaveAs) si quieres automatizarlo
-
-# --- GlazeWM ---
+# --- WSL y Bash ---
 $usarWSL = Read-Host "[?] ¿Quieres usar WSL? (y/n)"
 if ($usarWSL -eq "y") {
-    # --- WSL2 + Ubuntu ---
     Write-Host "[+] Revisando WSL..." -ForegroundColor Cyan
     wsl --status 2>$null
     if ($LASTEXITCODE -ne 0) {
@@ -235,7 +195,7 @@ if ($usarWSL -eq "y") {
     }
 
     Write-Host "[+] Ejecutando install.sh dentro de Ubuntu..." -ForegroundColor Cyan
-    wsl -d Ubuntu -e bash -c "curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh; chmod +x install.sh; bash install.sh"
+    wsl -d Ubuntu -e bash -c 'curl -O https://raw.githubusercontent.com/Pblo16/pablo.dots/refs/heads/main/install.sh; chmod +x install.sh; bash install.sh'
 }
-Write-Host ""
-Write-Host "✅ Instalación completa. Reinicia el sistema para aplicar los cambios." -ForegroundColor Green
+
+Write-Host "`n✅ Instalación completa. Reinicia el sistema para aplicar los cambios." -ForegroundColor Green
