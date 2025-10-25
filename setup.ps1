@@ -93,11 +93,22 @@ function Install-App {
             try {
                 $installerPath = "$tempDir\$name.exe"
                 Invoke-WebRequest -Uri $url -OutFile $installerPath -UseBasicParsing
-                Start-Process -FilePath $installerPath -ArgumentList "/silent", "/verysilent", "/norestart" -Wait
-                Write-Host "[✓] $name instalado." -ForegroundColor Green
+                if (Test-Path $installerPath) {
+                    Write-Host "[~] Instalador descargado: $installerPath" -ForegroundColor Cyan
+                    try {
+                        Start-Process -FilePath $installerPath -ArgumentList "/silent", "/verysilent", "/norestart" -Wait
+                        Write-Host "[✓] $name instalado." -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Host "[!] Error ejecutando el instalador de $name: $($_.Exception.Message)" -ForegroundColor Red
+                    }
+                }
+                else {
+                    Write-Host "[!] No se pudo descargar el instalador de $name desde $url" -ForegroundColor Red
+                }
             }
             catch {
-                Write-Host "[!] Error instalando $name desde $url" -ForegroundColor Red
+                Write-Host "[!] Error descargando el instalador de $name: $($_.Exception.Message)" -ForegroundColor Red
             }
         }
     }
