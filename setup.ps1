@@ -9,32 +9,32 @@ $repoScriptsBase = "https://raw.githubusercontent.com/Pblo16/windots/main/script
 $tempDir = "$env:TEMP\windots"
 
 # --- Autoactualización ---
-function AutoUpdate {
-    Write-Host "[~] Verificando actualización del instalador..." -ForegroundColor Cyan
-    try {
-        $tempSetup = "$tempDir\setup-latest.ps1"
-        New-Item -ItemType Directory -Force -Path $tempDir | Out-Null
-        Invoke-WebRequest -Uri $repoSetupUrl -OutFile $tempSetup -UseBasicParsing
-        if (Test-Path $PSCommandPath) {
-            $localHash = Get-FileHash $PSCommandPath
-            $remoteHash = Get-FileHash $tempSetup
-            if ($localHash.Hash -ne $remoteHash.Hash) {
-                Write-Host "[↑] Nueva versión detectada. Ejecutando actualizada..." -ForegroundColor Yellow
-                Copy-Item $tempSetup $PSCommandPath -Force
-                Start-Process powershell "-ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
-                exit
-            }
-            else {
-                Write-Host "[✓] Ya tienes la última versión." -ForegroundColor Green
-            }
-        }
-    }
-    catch {
-        Write-Host "[!] No se pudo verificar actualización, usando versión local." -ForegroundColor Yellow
-    }
-}
+# function AutoUpdate {
+#     Write-Host "[~] Verificando actualización del instalador..." -ForegroundColor Cyan
+#     try {
+#         $tempSetup = "$tempDir\setup-latest.ps1"
+#         New-Item -ItemType Directory -Force -Path $tempDir | Out-Null
+#         Invoke-WebRequest -Uri $repoSetupUrl -OutFile $tempSetup -UseBasicParsing
+#         if (Test-Path $PSCommandPath) {
+#             $localHash = Get-FileHash $PSCommandPath
+#             $remoteHash = Get-FileHash $tempSetup
+#             if ($localHash.Hash -ne $remoteHash.Hash) {
+#                 Write-Host "[↑] Nueva versión detectada. Ejecutando actualizada..." -ForegroundColor Yellow
+#                 Copy-Item $tempSetup $PSCommandPath -Force
+#                 Start-Process powershell "-ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+#                 exit
+#             }
+#             else {
+#                 Write-Host "[✓] Ya tienes la última versión." -ForegroundColor Green
+#             }
+#         }
+#     }
+#     catch {
+#         Write-Host "[!] No se pudo verificar actualización, usando versión local." -ForegroundColor Yellow
+#     }
+# }
 
-AutoUpdate
+# AutoUpdate
 
 # --- Requiere Admin ---
 function Test-AdminPrivileges {
