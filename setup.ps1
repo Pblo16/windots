@@ -37,7 +37,7 @@ function AutoUpdate {
 AutoUpdate
 
 # --- Requiere Admin ---
-function Require-Admin {
+function Test-AdminPrivileges {
     $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     if (-not $isAdmin) {
         if ($MyInvocation.MyCommand.Path) {
@@ -52,7 +52,7 @@ function Require-Admin {
 }
 
 
-Require-Admin
+Test-AdminPrivileges
 
 # --- Winget ---
 function Install-Winget {
@@ -149,7 +149,7 @@ if ($usarGlaze -eq "y") {
 }
 
 # --- Scripts del repo ---
-function Run-RepoScripts {
+function Invoke-RepoScripts {
     Write-Host "[+] Ejecutando scripts desde repo..." -ForegroundColor Cyan
     try {
         $scriptList = @(
@@ -158,7 +158,7 @@ function Run-RepoScripts {
         foreach ($s in $scriptList | Sort-Object) {
             $url = "$repoScriptsBase$s"
             Write-Host "[~] Ejecutando $s..." -ForegroundColor Cyan
-            Invoke-Expression (iwr -useb $url)
+            Invoke-Expression (Invoke-WebRequest -UseBasicParsing $url).Content
         }
     }
     catch {
@@ -166,9 +166,9 @@ function Run-RepoScripts {
     }
 }
 
-Run-RepoScripts
+Invoke-RepoScripts
 
-function Download-GitHubFolder {
+function Get-GitHubFolder {
     param(
         [string]$user = "Pblo16",
         [string]$repo = "windots",
@@ -192,7 +192,8 @@ function Download-GitHubFolder {
         }
     }
     catch {
-        Write-Host ("[!] Error descargando {0}: {1}" -f $folder, $_) -ForegroundColor Red
+        $errorMsg = $PSItem.ToString()
+        Write-Host "[!] Error descargando $folder`: $errorMsg" -ForegroundColor Red
     }
 }
 
@@ -202,8 +203,8 @@ $glazeConfig = "$env:USERPROFILE\.glzr\glazewm"
 New-Item -ItemType Directory -Force -Path $yasbConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $glazeConfig | Out-Null
 
-Download-GitHubFolder -folder "yasb" -dest $yasbConfig
-Download-GitHubFolder -folder "glazewm" -dest $glazeConfig
+Get-GitHubFolder -folder "yasb" -dest $yasbConfig
+Get-GitHubFolder -folder "glazewm" -dest $glazeConfig
 
 
 # Aquí puedes añadir lógica para descargar todos los archivos de esas carpetas (iwr + SaveAs) si quieres automatizarlo
@@ -213,7 +214,7 @@ $usarWSL = Read-Host "[?] ¿Quieres usar WSL? (y/n)"
 if ($usarWSL -eq "y") {
     # --- WSL2 + Ubuntu ---
     Write-Host "[+] Revisando WSL..." -ForegroundColor Cyan
-    $wslStatus = wsl --status 2>$null
+    wsl --status 2>$null
     if ($LASTEXITCODE -ne 0) {
         Write-Host "[+] Instalando WSL2 con Ubuntu..." -ForegroundColor Cyan
         wsl --install -d Ubuntu
