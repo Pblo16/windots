@@ -50,7 +50,13 @@ function Install-Downloadable {
     param ($url, $name, $dest = "$env:TEMP\$name.exe")
     Write-Host "[+] Descargando e instalando $name..." -ForegroundColor Cyan
     try {
-        $response = Invoke-WebRequest -Uri $url -MaximumRedirection 5 -OutFile $dest
+        # PowerShell 5 no soporta -MaximumRedirection en Invoke-WebRequest
+        if ($PSVersionTable.PSVersion.Major -ge 6) {
+            $response = Invoke-WebRequest -Uri $url -MaximumRedirection 5 -OutFile $dest
+        }
+        else {
+            $response = Invoke-WebRequest -Uri $url -OutFile $dest
+        }
         Start-Process $dest -Wait
     }
     catch {
