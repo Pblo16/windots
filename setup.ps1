@@ -126,13 +126,14 @@ if ($usarWSL -eq "y") {
 
 # Ejecutar variables de entorno personalizadas
 try {
-    $enVarsScript = Join-Path $PSScriptRoot "scripts\en-vars.ps1"
-    if (Test-Path $enVarsScript) {
+    $enVarsScript = if ($PSScriptRoot) { Join-Path $PSScriptRoot "scripts\en-vars.ps1" } else { "" }
+
+    if ($enVarsScript -and (Test-Path $enVarsScript)) {
         Write-Host "[+] Configurando variables de entorno personalizadas..." -ForegroundColor Cyan
         powershell -ExecutionPolicy Bypass -File $enVarsScript
     }
     else {
-        Write-Host "[!] No se encontró scripts/en-vars.ps1" -ForegroundColor Yellow
+        Write-Host "[!] No se encontró scripts/en-vars.ps1 o el script no se ejecuta desde un archivo .ps1" -ForegroundColor Yellow
     }
 }
 catch {
