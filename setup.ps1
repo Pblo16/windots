@@ -39,7 +39,7 @@ function Install-Downloadable {
         Start-Process $dest -Wait
     }
     catch {
-        Write-Host "[!] Error descargando $name: $($PSItem.Exception.Message)" -ForegroundColor Red
+        Write-Host "[!] Error descargando $name: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
