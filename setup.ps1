@@ -4,17 +4,11 @@
 function Require-Admin {
     $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     if (-not $isAdmin) {
-        if ($PSCommandPath) {
-            Write-Host "[!] Reiniciando como administrador..." -ForegroundColor Yellow
-            Start-Process powershell "-NoExit -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
-        }
-        else {
-            Write-Host "[!] No se puede reiniciar automáticamente como administrador. Ejecuta este script desde un archivo .ps1" -ForegroundColor Red
-        }
+        Write-Host "[!] Este script necesita permisos de administrador." -ForegroundColor Red
+        Write-Host "[!] Cierra esta ventana y ejecuta PowerShell como administrador para continuar." -ForegroundColor Yellow
         exit
     }
 }
-
 
 Require-Admin
 
