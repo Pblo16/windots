@@ -1,7 +1,7 @@
 /* --- Root Variables (Colors) --- */
 :root {
     /* --- Mica Inspired Color Variables --- */
-    --background-color: rgba(30, 34, 40, 0.7);
+    --background-color: rgb(30, 34, 40);
     --foreground-color: rgb(237, 238, 240);
     --accent-color: #0078d4;
     --border-color: rgb(53, 59, 69);
@@ -16,24 +16,23 @@
 * {
     font-size: 12px;
     color: var(--foreground-color);
-    font-weight: 600;
-    font-family: "Segoe UI", "JetBrainsMono NFP";
+    font-weight: 400;
+    font-family: "JetBrainsMono NFP";
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 /* --- Yasb Bar Itself --- */
-.yasb-bar {
-    background-color: var(--background-color);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
+.yasb-bar {}
 
 /* --- Individual Widgets --- */
 .widget {
-    padding: 0 12px;
-    margin: 0;
+    padding: 0px 4px;
+    margin: 2px;
+    background-color: var(--background-color);
+    border-radius: 6px;
+    border: 2px solid var(--border-color);
 }
 
 .container-right .widget .icon:hover {
@@ -51,118 +50,6 @@
     padding: 0px 2px;
 }
 
-/* --- Apps Widget Specific --- */
-.apps-widget {
-    padding: 0 4p 0 2px;
-}
-
-.apps-widget .widget-container .label {
-    font-size: 12px;
-}
-
-/* --- Komorebi Active Layout --- */
-.komorebi-active-layout {
-    padding: 0 4px;
-}
-
-.komorebi-active-layout .label {
-    font-weight: 600;
-    padding-bottom: 2px;
-}
-
-/* --- Workspace and Layout Containers --- */
-.apps-widget .widget-container,
-.komorebi-workspaces .widget-container,
-.komorebi-active-layout .widget-container,
-.glazewm-workspaces .widget-container,
-.glazewm-tiling-direction .widget-container {
-    background-color: var(--background-color);
-    border-radius: 12px;
-    margin: 4px 0;
-    border: 1px solid var(--border-color);
-}
-
-/* --- Komorebi & GlazeWM Workspaces --- */
-.komorebi-workspaces,
-.glazewm-workspaces {
-    padding: 0;
-}
-
-.komorebi-workspaces .offline-status,
-.glazewm-workspaces .offline-status {
-    color: var(--foreground-color);
-    font-size: 12px;
-    padding: 0 4px;
-    font-weight: 600;
-}
-
-.komorebi-workspaces .ws-btn,
-.glazewm-workspaces .ws-btn {
-    color: transparent;
-    width: 10px;
-    height: 10px;
-    background-color: var(--active-color);
-    border-radius: 5px;
-    margin: 0 2px;
-    font-size: 1px;
-}
-
-.komorebi-workspaces .ws-btn:hover,
-.glazewm-workspaces .ws-btn:hover {
-    color: var(--accent-color);
-    background-color: var(--hover-color);
-}
-
-.komorebi-workspaces .ws-btn.populated,
-.glazewm-workspaces .ws-btn.populated {
-    width: 10px;
-    height: 10px;
-    background-color: var(--active-color);
-    border-radius: 5px;
-    margin: 0 2px;
-    font-size: 1px;
-}
-
-.komorebi-workspaces .ws-btn.active,
-.glazewm-workspaces .ws-btn.active_populated,
-.glazewm-workspaces .ws-btn.active_empty {
-    color: transparent;
-    background-color: var(--icon-color);
-    width: 36px;
-    height: 10px;
-    border-radius: 5px;
-}
-
-/* --- Glazewm Tiling Direction --- */
-.glazewm-tiling-direction {
-    background-color: transparent;
-    padding: 0;
-    margin: 4px 0;
-}
-
-.glazewm-tiling-direction .btn {
-    font-size: 14px;
-    width: 14px;
-    padding: 0 4px 0 12px;
-    color: var(--foreground-color);
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 2px;
-}
-
-.glazewm-tiling-direction .btn:hover {
-    background-color: var(--hover-color);
-}
-
-/* --- Apps Widget Label --- */
-.apps-widget .label {
-    font-size: 14px;
-    padding: 0 2px;
-    color: var(--foreground-color);
-}
-
 /* --- Uptime Widget --- */
 .uptime {
     font-size: 14px;
@@ -172,9 +59,7 @@
 }
 
 /* --- Power Menu Widget --- */
-.power-menu-widget .label {
-    font-size: 13px;
-}
+.power-menu-widget .label {}
 
 /* --- Power Menu Popup --- */
 .power-menu-popup {
@@ -250,47 +135,26 @@
     color: var(--foreground-color);
 }
 
-/* --- Brightness Widget --- */
-.brightness-widget {
-    margin-right: -10px;
-}
-
-.brightness-widget .icon {
-    color: var(--foreground-color);
-}
-
 /* --- Common Widget Padding --- */
-.weather-widget,
 .battery-widget,
-.wifi-widget,
-.volume-widget,
-.brightness-widget {
+.volume-widget {
     padding: 0 6px;
 }
 
-/* --- Weather Widget --- */
-.weather-widget .icon {
-    font-size: 18px;
-    margin: 0 2px 1px 0;
-}
 
 /* --- Wallpapers Widget --- */
 .wallpapers-widget .icon {
     color: var(--foreground-color);
     font-size: 14px;
+    padding-right: 2px;
     margin: 0;
 }
 
 /* --- Taskbar Widget --- */
-.taskbar-widget {
-    padding: 0;
-    margin: 0;
-    border: none;
-}
+
 
 .taskbar-widget .app-container {
-    padding: 0 6px;
-    border: none;
+    padding: 6px;
     margin: 0;
 }
 
@@ -298,17 +162,9 @@
     background-color: var(--hover-color);
     border-radius: 3px;
 }
+
 .taskbar-widget .app-container .app-title {
     padding-left: 4px;
-}
-/* --- Whkd Widget --- */
-.whkd-widget {
-    padding: 0 6px 0 6px;
-}
-
-.whkd-widget .icon {
-    font-size: 14px;
-    color: var(--foreground-color);
 }
 
 /* --- Wallpapers Gallery Window --- */
@@ -351,43 +207,87 @@
 
 /* --- Systray --- */
 .systray {
-    border: none;
-    margin-right: -12px;
     display: flex;
     align-items: center;
 }
 
-.systray .unpinned-container {
-    border-radius: 8px;
-    padding: 2px;
-}
-
-.systray .pinned-container {
-    background: transparent;
-    padding: 2px;
-}
+.systray .unpinned-container {}
 
 .systray .button {
-    margin: 0 2px;
-    color: var(--foreground-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 3px;
-}
-
-.systray .button:hover {
-    background: var(--hover-color);
+    border-radius: 0px;
+    cursor: pointer;
 }
 
 .systray .unpinned-visibility-btn {
-    border-radius: 4px;
+    background-color: transparent;
     font-size: 20px;
 }
 
-/* --- Common Styles --- */
-.wifi-widget,
-.brightness-widget,
-.systray {
-    margin-top: 2.4px;
+/* --- Media --- */
+.media-widget {}
+
+.media-widget .widget-container {
+    background: ;
+}
+
+.media-widget .label {}
+
+.media-widget .label.alt {}
+
+
+.media-widget .btn.prev,
+.media-widget .btn.next,
+.media-widget .btn.pause,
+.media-widget .btn.play,
+.media-widget .btn.disabled {
+    font-size: 16px;
+    color: var(--foreground-color);
+    padding: 0 6px;
+}
+
+.media-menu {
+    background-color: transparent;
+}
+
+.media-menu .title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--foreground-color);
+    margin-bottom: 8px;
+}
+
+.media-menu .artist {
+    font-size: 11px;
+    color: var(--foreground-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.media-menu .btn.play,
+.media-menu .btn.pause,
+.media-menu .btn.prev,
+.media-menu .btn.next,
+.media-menu .btn.disabled {
+    font-size: 20px;
+    color: var(--foreground-color);
+    padding: 0 12px;
+}
+
+.media-menu .thumbnail {
+    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    margin-right: 8px;
+}
+
+.media-menu .source {
+    font-size: 12px;
+    background-color: var(--background-color);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+    color: #ffffff;
 }

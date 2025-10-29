@@ -10,9 +10,9 @@ bars:
       position: "top"
       center: false
     blur_effect:
-      enabled: true
-      acrylic: false
-      dark_mode: true
+      enabled: false
+      acrylic: true
+      dark_mode: false
       round_corners: true
       border_color: None
     window_flags:
@@ -27,9 +27,9 @@ bars:
       bottom: 0
       right: 10
     widgets:
-      left: ["power_menu", "taskbar"]
+      left: ["power_menu", "taskbar", "media"]
       center: ["active_window"]
-      right: ["systray", "wallpapers", "media", "clock", "battery", "volume"]
+      right: ["systray", "wallpapers", "volume", "clock", "battery"]
 widgets:
   active_window:
     type: "yasb.active_window.ActiveWindowWidget"
@@ -39,7 +39,7 @@ widgets:
       label_no_window: ""
       label_icon: true
       label_icon_size: 14
-      max_length: 56
+      max_length: 24
       max_length_ellipsis: "..."
       monitor_exclusive: false
   clock:
@@ -80,7 +80,7 @@ widgets:
       animation_duration: 200
       button_row: 5
       buttons:
-        shutdown: ["\uf011", "Shut Down"]
+        shutdown: ["\u23fb", "Shut Down"]
         restart: ["\uead2", "Restart"]
         signout: ["\udb80\udf43", "Sign out"]
         hibernate: ["\uf28e", "Hibernate"]
@@ -90,39 +90,14 @@ widgets:
     type: "yasb.systray.SystrayWidget"
     options:
       class_name: "systray"
-      label_collapsed: "\udb80\udf5e"
+      label_collapsed: "\udb81\udc5d"
       label_expanded: "\udb80\udf5f"
       label_position: "right"
       icon_size: 16
       pin_click_modifier: "alt"
-      show_unpinned: true
+      show_unpinned: false
       show_battery: false
       show_volume: false
-  media:
-    type: "yasb.media.MediaWidget"
-    options:
-      label: "{title} - {artist}"
-      label_alt: "{title}"
-      hide_empty: true
-      callbacks:
-        on_left: "toggle_label"
-        on_middle: "do_nothing"
-        on_right: "do_nothing"
-      max_field_size:
-        label: 20
-        label_alt: 30
-      show_thumbnail: true
-      controls_only: false
-      controls_left: false
-      controls_hide: false
-      thumbnail_alpha: 80
-      thumbnail_padding: 8
-      thumbnail_corner_radius: 16
-      icons:
-        prev_track: "\udb81\udcae"
-        next_track: "\udb81\udcad"
-        play: "\udb81\udc0a"
-        pause: "\udb80\udfe4"
   taskbar:
     type: "yasb.taskbar.TaskbarWidget"
     options:
@@ -141,14 +116,14 @@ widgets:
     type: "yasb.wallpapers.WallpapersWidget"
     options:
       label: "<span>\uf03e</span>"
-      image_path: "C:\\Downloads\\MyWallpapers"
+      image_path: "$env:USERPROFILE\\.config\\Wallpapers"
       change_automatically: false
       update_interval: 60
       gallery:
         enabled: true
         blur: true
         image_width: 220
-        image_per_page: 8
+        image_per_page: 6
         show_buttons: false
         orientation: "portrait"
         image_spacing: 8
@@ -157,3 +132,55 @@ widgets:
         lazy_load_fadein: 400
         image_corner_radius: 20
         enable_cache: false
+  media:
+    type: "yasb.media.MediaWidget"
+    options:
+      label: "{title} - {artist}"
+      label_alt: ""
+      hide_empty: true
+
+      callbacks:
+        on_left: "toggle_media_menu"
+        on_middle: "do_nothing"
+        on_right: "do_nothing"
+      max_field_size:
+        label: 30
+        label_alt: 30
+      show_thumbnail: true
+      controls_only: false
+      controls_left: true
+      controls_hide: false
+      thumbnail_alpha: 80
+      thumbnail_padding: 8
+      thumbnail_corner_radius: 16
+      icons:
+        prev_track: "\udb81\udcae"
+        next_track: "\udb81\udcad"
+        play: "\uf04b"
+        pause: "\uf04c"
+      media_menu:
+        blur: true
+        round_corners: true
+        round_corners_type: "normal"
+        border_color: "system"
+        alignment: "center"
+        direction: "down"
+        offset_top: 6
+        offset_left: 0
+        thumbnail_corner_radius: 8
+        thumbnail_size: 120
+        max_title_size: 90
+        max_artist_size: 40
+        show_source: true
+        show_volume_slider: true
+      media_menu_icons:
+        prev_track: "\udb81\udcae"
+        next_track: "\udb81\udcad"
+        play: "\uf04b"
+        pause: "\uf04c"
+      scrolling_label:
+        enabled: false
+        update_interval_ms: 13
+        style: "left" # can be "left", "right", "bounce", "bounce-ease"
+        separator: "    |    "
+        label_padding: 10

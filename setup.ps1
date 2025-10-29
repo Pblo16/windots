@@ -27,6 +27,59 @@ function Require-Admin {
 }
 
 Require-Admin
+# Variables para control de sobrescritura entre llamadas
+$script:OverwriteAll = $false
+$script:SkipAll = $false
+
+# Función de copia que pregunta si debe sobrescribir archivos existentes
+function Copy-WithPrompt {
+    param (
+        [Parameter(Mandatory=$true)][string]$Source,
+        [Parameter(Mandatory=$true)][string]$Destination
+    )
+
+    if (-not (Test-Path $Destination)) {
+        New-Item -ItemType Directory -Force -Path $Destination | Out-Null
+    }
+
+    # Normalizar base del origen (quitar posible "\\*" o "*")
+    $baseSource = $Source -replace '\\\*$','' -replace '\*$',''
+
+    # Crear subdirectorios primero
+    $dirs = Get-ChildItem -Path $baseSource -Recurse -Force -Directory -ErrorAction SilentlyContinue
+    foreach ($d in $dirs) {
+        $rel = $d.FullName.Substring($baseSource.Length).TrimStart('\','/')
+        $destDir = Join-Path $Destination $rel
+        if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Force -Path $destDir | Out-Null }
+    }
+
+    # Copiar ficheros preguntando cuando existe el destino
+    $files = Get-ChildItem -Path $baseSource -Recurse -Force -File -ErrorAction SilentlyContinue
+    foreach ($f in $files) {
+        $rel = $f.FullName.Substring($baseSource.Length).TrimStart('\','/')
+        $destFile = Join-Path $Destination $rel
+
+        if (Test-Path $destFile) {
+            if ($script:OverwriteAll) { Copy-Item -Path $f.FullName -Destination $destFile -Force; continue }
+            if ($script:SkipAll) { continue }
+
+            while ($true) {
+                $ans = Read-Host "El archivo '$rel' ya existe. Sobrescribir? [S]í/[N]o/[A]sí a todo/[I]gnorar todo/[C]ancelar"
+                switch ($ans.ToUpper()) {
+                    'S' { Copy-Item -Path $f.FullName -Destination $destFile -Force; break }
+                    'N' { break }
+                    'A' { $script:OverwriteAll = $true; Copy-Item -Path $f.FullName -Destination $destFile -Force; break }
+                    'I' { $script:SkipAll = $true; break }
+                    'C' { throw "Operación cancelada por el usuario." }
+                    Default { Write-Host "Respuesta no válida. Usa S, N, A, I o C." -ForegroundColor Yellow }
+                }
+            }
+        }
+        else {
+            Copy-Item -Path $f.FullName -Destination $destFile -Force
+        }
+    }
+}
 # Configs
 Write-Host "[+] Clonando configuraciones de Windows..." -ForegroundColor Cyan
 $repoPath = "$env:TEMP\windots"
@@ -43,10 +96,11 @@ New-Item -ItemType Directory -Force -Path $mondrianConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $ohmyposhConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $weztermConfig | Out-Null
 
-Copy-Item "$repoPath\yasb\*" $yasbConfig -Recurse -Force
-Copy-Item "$repoPath\mondrian\*" $mondrianConfig -Recurse -Force
-Copy-Item "$repoPath\oh-my-posh\*" $ohmyposhConfig -Recurse -Force
-Copy-Item "$repoPath\wezterm\*" $weztermConfig -Recurse -Force
+# Copiar configuraciones con prompt si el archivo ya existe
+Copy-WithPrompt "$repoPath\yasb\*" $yasbConfig
+Copy-WithPrompt "$repoPath\mondrian\*" $mondrianConfig
+Copy-WithPrompt "$repoPath\oh-my-posh\*" $ohmyposhConfig
+Copy-WithPrompt "$repoPath\wezterm\*" $weztermConfig
 
 Write-Host "[✓] Configuraciones copiadas correctamente." -ForegroundColor Green
 
