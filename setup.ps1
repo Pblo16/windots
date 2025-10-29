@@ -107,17 +107,24 @@ $yasbConfig = "$env:USERPROFILE\.config\yasb"
 $mondrianConfig = "$env:USERPROFILE\.config\mondrian"
 $ohmyposhConfig = "$env:USERPROFILE\.oh-my-posh"
 $weztermConfig = "$env:USERPROFILE\.config\wezterm"
+$wallpapersConfig = "$env:USERPROFILE\.config\wallpapers"
 
 New-Item -ItemType Directory -Force -Path $yasbConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $mondrianConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $ohmyposhConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $weztermConfig | Out-Null
+New-Item -ItemType Directory -Force -Path $wallpapersConfig | Out-Null
 
 # Copiar configuraciones con prompt si el archivo ya existe
 Copy-WithPrompt "$repoPath\yasb\*" $yasbConfig
 Copy-WithPrompt "$repoPath\mondrian\*" $mondrianConfig
 Copy-WithPrompt "$repoPath\oh-my-posh\*" $ohmyposhConfig
 Copy-WithPrompt "$repoPath\wezterm\*" $weztermConfig
+
+# Clonar wallpapers repo en .config\wallpapers
+Write-Host "[+] Clonando wallpapers en $wallpapersConfig..." -ForegroundColor Cyan
+if (Test-Path $wallpapersConfig) { Remove-Item -Recurse -Force $wallpapersConfig }
+git clone https://github.com/fr0st-iwnl/wallz.git $wallpapersConfig
 
 Write-Host "[✓] Configuraciones copiadas correctamente." -ForegroundColor Green
 

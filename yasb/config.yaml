@@ -116,7 +116,7 @@ widgets:
     type: "yasb.wallpapers.WallpapersWidget"
     options:
       label: "<span>\uf03e</span>"
-      image_path: "$env:USERPROFILE\\.config\\Wallpapers"
+      image_path: "$env:USERPROFILE\\.config\\wallpapers"
       change_automatically: false
       update_interval: 60
       gallery:
