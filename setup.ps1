@@ -46,8 +46,8 @@ function Copy-WithPrompt {
     $baseSource = $Source -replace '\\\*$','' -replace '\*$',''
 
     # Mostrar info de qué base de origen y destino se van a procesar
-    Write-Host "Procesando origen: $baseSource" -ForegroundColor Cyan
-    Write-Host "Destino base:  $Destination" -ForegroundColor Cyan
+    $rootName = Split-Path $baseSource -Leaf
+    Write-Host "Copiando carpeta: $rootName -> $Destination" -ForegroundColor Cyan
 
     # Crear subdirectorios primero
     $dirs = Get-ChildItem -Path $baseSource -Recurse -Force -Directory -ErrorAction SilentlyContinue
@@ -58,19 +58,23 @@ function Copy-WithPrompt {
     }
 
     # Copiar ficheros preguntando cuando existe el destino
-    $files = Get-ChildItem -Path $baseSource -Recurse -Force -File -ErrorAction SilentlyContinue
-    foreach ($f in $files) {
+    # Ordenar y hacer únicos por FullName para evitar prompts dobles
+    $files = Get-ChildItem -Path $baseSource -Recurse -Force -File -ErrorAction SilentlyContinue | Sort-Object -Property FullName -Unique
+    $total = $files.Count
+    for ($i = 0; $i -lt $files.Count; $i++) {
+        $f = $files[$i]
         $rel = $f.FullName.Substring($baseSource.Length).TrimStart('\','/')
         $destFile = Join-Path $Destination $rel
+        $index = $i + 1
 
         if (Test-Path $destFile) {
             if ($script:OverwriteAll) { Copy-Item -Path $f.FullName -Destination $destFile -Force; continue }
             if ($script:SkipAll) { continue }
 
             while ($true) {
-                # Mostrar rutas completas para que el usuario sepa exactamente qué archivo se está pidiendo
-                Write-Host "Origen: $($f.FullName)" -ForegroundColor Yellow
-                Write-Host "Destino: $destFile" -ForegroundColor Yellow
+                # Mostrar rutas completas y progreso para que el usuario sepa exactamente qué archivo se está pidiendo
+                Write-Host "[$index/$total] Origen: $($f.FullName)" -ForegroundColor Yellow
+                Write-Host "[$index/$total] Destino: $destFile" -ForegroundColor Yellow
                 $ans = Read-Host "Sobrescribir? [S/N/A/I/C]"
                 switch ($ans.ToUpper()) {
                     'S' { Copy-Item -Path $f.FullName -Destination $destFile -Force; break }
