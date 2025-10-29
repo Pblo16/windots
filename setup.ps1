@@ -58,36 +58,42 @@ function Copy-WithPrompt {
     }
 
     # Copiar ficheros preguntando cuando existe el destino
-    # Ordenar y hacer únicos por FullName para evitar prompts dobles
-    $files = Get-ChildItem -Path $baseSource -Recurse -Force -File -ErrorAction SilentlyContinue | Sort-Object -Property FullName -Unique
-    $total = $files.Count
-    for ($i = 0; $i -lt $files.Count; $i++) {
-        $f = $files[$i]
+    # Usar un diccionario para evitar prompts dobles por ruta relativa
+    $files = Get-ChildItem -Path $baseSource -Recurse -Force -File -ErrorAction SilentlyContinue
+    $fileMap = @{}
+    foreach ($f in $files) {
         $rel = $f.FullName.Substring($baseSource.Length).TrimStart('\','/')
+        $fileMap[$rel] = $f.FullName
+    }
+    $relKeys = $fileMap.Keys
+    $total = $relKeys.Count
+    $i = 0
+    foreach ($rel in $relKeys) {
+        $fPath = $fileMap[$rel]
         $destFile = Join-Path $Destination $rel
         $index = $i + 1
-
+        $i++
         if (Test-Path $destFile) {
-            if ($script:OverwriteAll) { Copy-Item -Path $f.FullName -Destination $destFile -Force; continue }
+            if ($script:OverwriteAll) { Copy-Item -Path $fPath -Destination $destFile -Force; continue }
             if ($script:SkipAll) { continue }
 
-            while ($true) {
-                # Mostrar rutas completas y progreso para que el usuario sepa exactamente qué archivo se está pidiendo
-                Write-Host "[$index/$total] Origen: $($f.FullName)" -ForegroundColor Yellow
+            $prompted = $false
+            while (-not $prompted) {
+                Write-Host "[$index/$total] Origen: $fPath" -ForegroundColor Yellow
                 Write-Host "[$index/$total] Destino: $destFile" -ForegroundColor Yellow
                 $ans = Read-Host "Sobrescribir? [S/N/A/I/C]"
                 switch ($ans.ToUpper()) {
-                    'S' { Copy-Item -Path $f.FullName -Destination $destFile -Force; break }
-                    'N' { break }
-                    'A' { $script:OverwriteAll = $true; Copy-Item -Path $f.FullName -Destination $destFile -Force; break }
-                    'I' { $script:SkipAll = $true; break }
+                    'S' { Copy-Item -Path $fPath -Destination $destFile -Force; $prompted = $true }
+                    'N' { $prompted = $true }
+                    'A' { $script:OverwriteAll = $true; Copy-Item -Path $fPath -Destination $destFile -Force; $prompted = $true }
+                    'I' { $script:SkipAll = $true; $prompted = $true }
                     'C' { throw "Operacion cancelada por el usuario." }
                     Default { Write-Host "Respuesta no valida. Usa S, N, A, I o C." -ForegroundColor Yellow }
                 }
             }
         }
         else {
-            Copy-Item -Path $f.FullName -Destination $destFile -Force
+            Copy-Item -Path $fPath -Destination $destFile -Force
         }
     }
 }
