@@ -10,79 +10,27 @@ bars:
       position: "top"
       center: false
     blur_effect:
-      enabled: false
+      enabled: true
       acrylic: false
-      dark_mode: false
-      round_corners: false
+      dark_mode: true
+      round_corners: true
       border_color: None
     window_flags:
       always_on_top: false
       windows_app_bar: true
     dimensions:
       width: "100%"
-      height: 28
+      height: 34
     padding:
-      top: 4
-      left: 4
+      top: 6
+      left: 10
       bottom: 0
-      right: 4
+      right: 10
     widgets:
-      left: ["glazewm_workspaces", "media", "cava", "taskbar"]
+      left: ["power_menu", "taskbar"]
       center: ["active_window"]
-      right: ["wallpapers", "clock", "volume", "power_menu"]
+      right: ["systray", "wallpapers", "media", "clock", "battery", "volume"]
 widgets:
-  media:
-    type: "yasb.media.MediaWidget"
-    options:
-      label: "{title} - {artist}"
-      label_alt: ""
-      hide_empty: true
-      callbacks:
-        on_left: "toggle_media_menu"
-        on_middle: "do_nothing"
-        on_right: "do_nothing"
-      max_field_size:
-        label: 30
-        label_alt: 30
-      show_thumbnail: false
-      controls_only: false
-      controls_left: true
-      controls_hide: false
-      thumbnail_alpha: 80
-      thumbnail_padding: 8
-      thumbnail_corner_radius: 16
-      icons:
-        prev_track: "󰒮"
-        next_track: "󰒭"
-        play: ""
-        pause: ""
-      media_menu:
-        blur: true
-        round_corners: true
-        round_corners_type: "normal"
-        border_color: "system"
-        alignment: "center"
-        direction: "down"
-        offset_top: 6
-        offset_left: 0
-        thumbnail_corner_radius: 8
-        thumbnail_size: 120
-        max_title_size: 90
-        max_artist_size: 40
-        show_source: true
-        show_volume_slider: true
-      media_menu_icons:
-        play: ""
-        pause: ""
-        prev_track: "󰒮"
-        next_track: "󰒭"
-      scrolling_label:
-        enabled: false
-        update_interval_ms: 13
-        style: "left" # can be "left", "right", "bounce", "bounce-ease"
-        separator: "    |    "
-        label_padding: 10
-
   active_window:
     type: "yasb.active_window.ActiveWindowWidget"
     options:
@@ -93,13 +41,14 @@ widgets:
       label_icon_size: 14
       max_length: 56
       max_length_ellipsis: "..."
-      monitor_exclusive: true
+      monitor_exclusive: false
   clock:
     type: "yasb.clock.ClockWidget"
     options:
-      label: "<span>\udb83\ude17</span>{%a %b %d %H:%M}"
-      label_alt: "<span>\udb83\ude17</span>{%A, %d %B %Y %H:%M}"
+      label: "{%a, %d %b %H:%M}"
+      label_alt: "{%A, %d %B %Y %H:%M:%S}"
       timezones: []
+
   volume:
     type: "yasb.volume.VolumeWidget"
     options:
@@ -113,27 +62,72 @@ widgets:
         - "\uf028"
       callbacks:
         on_right: "exec cmd.exe /c start ms-settings:sound"
+  battery:
+    type: "yasb.battery.BatteryWidget"
+    options:
+      label: "<span>{icon}</span> {percent}%"
+      label_alt: "<span>{icon}</span> {percent}% | time: {time_remaining}"
+      charging_options:
+        icon_format: "{charging_icon}"
+
   power_menu:
     type: "yasb.power_menu.PowerMenuWidget"
     options:
-      label: "<span>\uf011</span>"
+      label: "\ue62a"
       uptime: True
-      blur: false
-      blur_background: false
-      animation_duration: 1000
+      blur: False
+      blur_background: True
+      animation_duration: 200
       button_row: 5
       buttons:
         shutdown: ["\uf011", "Shut Down"]
         restart: ["\uead2", "Restart"]
         signout: ["\udb80\udf43", "Sign out"]
-        sleep: ["\udb82\udd04", "Sleep"]
-        cancel: ["\udb81\udf3a", "Cancel"]
+        hibernate: ["\uf28e", "Hibernate"]
+        sleep: ["\u23fe", "Sleep"]
+        cancel: ["", "Cancel"]
+  systray:
+    type: "yasb.systray.SystrayWidget"
+    options:
+      class_name: "systray"
+      label_collapsed: "\udb80\udf5e"
+      label_expanded: "\udb80\udf5f"
+      label_position: "right"
+      icon_size: 16
+      pin_click_modifier: "alt"
+      show_unpinned: true
+      show_battery: false
+      show_volume: false
+  media:
+    type: "yasb.media.MediaWidget"
+    options:
+      label: "{title} - {artist}"
+      label_alt: "{title}"
+      hide_empty: true
+      callbacks:
+        on_left: "toggle_label"
+        on_middle: "do_nothing"
+        on_right: "do_nothing"
+      max_field_size:
+        label: 20
+        label_alt: 30
+      show_thumbnail: true
+      controls_only: false
+      controls_left: false
+      controls_hide: false
+      thumbnail_alpha: 80
+      thumbnail_padding: 8
+      thumbnail_corner_radius: 16
+      icons:
+        prev_track: "\udb81\udcae"
+        next_track: "\udb81\udcad"
+        play: "\udb81\udc0a"
+        pause: "\udb80\udfe4"
   taskbar:
     type: "yasb.taskbar.TaskbarWidget"
     options:
-      animation:
-        enabled: true
-      icon_size: 15
+      animation: true
+      icon_size: 16
       ignore_apps:
         processes: []
         titles: []
@@ -146,47 +140,20 @@ widgets:
   wallpapers:
     type: "yasb.wallpapers.WallpapersWidget"
     options:
-      label: "<span>\udb83\ude09</span>"
-      image_path: "C:\\Users\\Sum\\Downloads\\MyWallpapers"
+      label: "<span>\uf03e</span>"
+      image_path: "C:\\Downloads\\MyWallpapers"
       change_automatically: false
       update_interval: 60
       gallery:
         enabled: true
-        blur: false
+        blur: true
         image_width: 220
         image_per_page: 8
-        show_buttons: true
+        show_buttons: false
         orientation: "portrait"
         image_spacing: 8
         lazy_load: true
-        lazy_load_delay: 10
-        lazy_load_fadein: 10
-        image_corner_radius: 0
-        enable_cache: true
-  glazewm_workspaces:
-    type: "glazewm.workspaces.GlazewmWorkspacesWidget"
-    options:
-      offline_label: "Sum"
-      hide_empty_workspaces: false
-      hide_if_offline: false
-  cava:
-    type: "yasb.cava.CavaWidget"
-    options:
-      bar_height: 12
-      min_bar_height: 0
-      gradient: 1
-      reverse: 0
-      foreground: "#89b4fa"
-      gradient_color_1: "#ffffff"
-      gradient_color_2: "#ffffff"
-      gradient_color_3: "#ffffff"
-      bars_number: 8
-      bar_spacing: 2
-      bar_width: 4
-      sleep_timer: 2
-      hide_empty: false
-      container_padding:
-        top: 2
-        left: 8
-        bottom: 0
-        right: 8
+        lazy_load_delay: 80
+        lazy_load_fadein: 400
+        image_corner_radius: 20
+        enable_cache: false
