@@ -34,13 +34,19 @@ if (Test-Path $repoPath) { Remove-Item -Recurse -Force $repoPath }
 git clone https://github.com/Pblo16/windots.git $repoPath
 
 $yasbConfig = "$env:USERPROFILE\.config\yasb"
-$glazeConfig = "$env:USERPROFILE\.glzr\glazewm"
+$mondrianConfig = "$env:USERPROFILE\.config\mondrian"
+$ohmyposhConfig = "$env:USERPROFILE\.oh-my-posh"
+$weztermConfig = "$env:USERPROFILE\.config\wezterm"
 
 New-Item -ItemType Directory -Force -Path $yasbConfig | Out-Null
-New-Item -ItemType Directory -Force -Path $glazeConfig | Out-Null
+New-Item -ItemType Directory -Force -Path $mondrianConfig | Out-Null
+New-Item -ItemType Directory -Force -Path $ohmyposhConfig | Out-Null
+New-Item -ItemType Directory -Force -Path $weztermConfig | Out-Null
 
 Copy-Item "$repoPath\yasb\*" $yasbConfig -Recurse -Force
-Copy-Item "$repoPath\glazewm\*" $glazeConfig -Recurse -Force
+Copy-Item "$repoPath\mondrian\*" $mondrianConfig -Recurse -Force
+Copy-Item "$repoPath\oh-my-posh\*" $ohmyposhConfig -Recurse -Force
+Copy-Item "$repoPath\wezterm\*" $weztermConfig -Recurse -Force
 
 Write-Host "[✓] Configuraciones copiadas correctamente." -ForegroundColor Green
 
