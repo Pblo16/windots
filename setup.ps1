@@ -45,6 +45,10 @@ function Copy-WithPrompt {
     # Normalizar base del origen (quitar posible "\\*" o "*")
     $baseSource = $Source -replace '\\\*$','' -replace '\*$',''
 
+    # Mostrar info de qué base de origen y destino se van a procesar
+    Write-Host "Procesando origen: $baseSource" -ForegroundColor Cyan
+    Write-Host "Destino base:  $Destination" -ForegroundColor Cyan
+
     # Crear subdirectorios primero
     $dirs = Get-ChildItem -Path $baseSource -Recurse -Force -Directory -ErrorAction SilentlyContinue
     foreach ($d in $dirs) {
@@ -64,14 +68,17 @@ function Copy-WithPrompt {
             if ($script:SkipAll) { continue }
 
             while ($true) {
-                $ans = Read-Host "El archivo '$rel' ya existe. Sobrescribir? [S]í/[N]o/[A]sí a todo/[I]gnorar todo/[C]ancelar"
+                # Mostrar rutas completas para que el usuario sepa exactamente qué archivo se está pidiendo
+                Write-Host "Origen: $($f.FullName)" -ForegroundColor Yellow
+                Write-Host "Destino: $destFile" -ForegroundColor Yellow
+                $ans = Read-Host "Sobrescribir? [S/N/A/I/C]"
                 switch ($ans.ToUpper()) {
                     'S' { Copy-Item -Path $f.FullName -Destination $destFile -Force; break }
                     'N' { break }
                     'A' { $script:OverwriteAll = $true; Copy-Item -Path $f.FullName -Destination $destFile -Force; break }
                     'I' { $script:SkipAll = $true; break }
-                    'C' { throw "Operación cancelada por el usuario." }
-                    Default { Write-Host "Respuesta no válida. Usa S, N, A, I o C." -ForegroundColor Yellow }
+                    'C' { throw "Operacion cancelada por el usuario." }
+                    Default { Write-Host "Respuesta no valida. Usa S, N, A, I o C." -ForegroundColor Yellow }
                 }
             }
         }
