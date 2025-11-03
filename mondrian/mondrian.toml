@@ -2,7 +2,7 @@
 
 [general]
 allow_focus_on_empty_monitor = true # if true, the focus action will also consider empty monitors  
-animations.duration = 150  # duration of the animation in milliseconds
+animations.duration = 300  # duration of the animation in milliseconds
 animations.enabled = true # enables or disables the animations
 animations.framerate = 144 # animations framerate
 animations.type = "ease_out_back" # can be "linear" or any of the easings functions from https://easings.net/ (in snake_case)
@@ -11,12 +11,12 @@ default_workspace = "1" # default workspace
 detect_maximized_windows = true # if true, maximized windows will be detected and they will not be managed by the tiling engine
 floating_wins.centered = true # if true, floating windows are centered on the monitor when released
 floating_wins.size = "relative" # how floating windows are resized
-floating_wins.size_fixed = [700, 400] # fixed size of the floating window 
+floating_wins.size_fixed = [2000, 700] # fixed size of the floating window 
 floating_wins.size_ratio = [
-    0.5,
-    0.5,
+    0.9,
+    0.9,
 ] # ratio of the floating window's size relative to the monitor 
-floating_wins.topmost = true # if true, floating windows are always on top of other windows
+floating_wins.topmost = false # if true, floating windows are always on top of other windows
 free_move_in_monitor = false # if true, when the window is inserted in a new monitor, the position will determined by where the mouse is
 history_based_navigation = true # if true, the navigation will prioritize the focus history
 insert_in_monitor = true # if true, when the window is moved to a new monitor, it will be inserted instead of being swapped
@@ -25,8 +25,8 @@ move_cursor_on_focus = true # if true, the cursor will be moved to the center of
 [layout]
 focalized_padding = 8                # padding for the focalized window, it must be between 0 and 120
 half_focalized_paddings.borders = 18 # padding between border and tiles for the half-focalized windows, it must be between 0 and 100
-half_focalized_paddings.tiles = 12   # padding between tiles for the half-focalized windows, it must be between 0 and 100 
-paddings.borders = 8                # padding between border and tiles, it must be between 0 and 100
+half_focalized_paddings.tiles = 18   # padding between tiles for the half-focalized windows, it must be between 0 and 100 
+paddings.borders = 3              # padding between border and tiles, it must be between 0 and 100
 paddings.tiles = 4                   # padding between tiles, it must be between 0 and 100 
 tiling_strategy = "twostep"     # can be "golden_ratio", "horizontal", "vertical", "twostep" or "squared"
 
@@ -78,7 +78,7 @@ bindings = [
     { modifiers = "CTRL+SHIFT+ALT", key = "down", action = "insert down" },
 
     { modifiers = "CTRL+SHIFT+ALT", key = "h", action = "insert left" },
-    { modifiers = "CTRL+SHIFT+ALT", key = "l", action = "insert right" },
+    { modifiers = "CTRL+SHIFT+ALT", key = "l", action = "insert right" },   
     { modifiers = "CTRL+SHIFT+ALT", key = "k", action = "insert up" },
     { modifiers = "CTRL+SHIFT+ALT", key = "j", action = "insert down" },
 
@@ -97,9 +97,13 @@ bindings = [
     { modifiers = "ALT", key = "2", action = "focus-workspace 2" },
     { modifiers = "SHIFT+ALT", key = "1", action = "move-to-workspace 1" },
     { modifiers = "SHIFT+ALT", key = "2", action = "move-to-workspace 2" },
+    # Monitors
+    { modifiers = "CTRL", key = "1", action = "focus-monitor left" },
+    { modifiers = "CTRL", key = "2", action = "focus-monitor right" },
     # Others
     { modifiers = "ALT", key = "r", action = "release" },
     { modifiers = "ALT", key = "f", action = "focalize" },
+    { modifiers = "ALT", key = "t", action = "switch-focus" },
     { modifiers = "ALT", key = "m", action = "minimize" },
     { modifiers = "ALT", key = "v", action = "invert" },
     { modifiers = "ALT+SHIFT", key = "p", action = "pause" },
@@ -109,19 +113,19 @@ bindings = [
 [modules.overlays]
 active.color = "#FFFFFF"         # color of the border, as [r, g, b]/[r, g, b, a] or as hex string ("#rrggbb"/"#rrggbbaa")
 active.enabled = true            # shows the active overlay
-border_radius = 3               # border radius
+border_radius = 12               # border radius
 enabled = true                   # enables or disables the overlays module
-floating.color = "#DCC6E0"       # color of the border, as [r, g, b]/[r, g, b, a] or as hex string ("#rrggbb"/"#rrggbbaa")
+floating.color = "#a8a8a89f"       # color of the border, as [r, g, b]/[r, g, b, a] or as hex string ("#rrggbb"/"#rrggbbaa")
 floating.enabled = true          # shows the floating overlay
 focalized.color = "#FFFFFF"      # color of the border, as [r, g, b]/[r, g, b, a] or as hex string ("#rrggbb"/"#rrggbbaa")
 focalized.enabled = true         # shows the focalized overlay
 half_focalized.color = "#DCF2D7" # color of the border, as [r, g, b]/[r, g, b, a] or as hex string ("#rrggbb"/"#rrggbbaa")
 half_focalized.enabled = true    # shows the half-focalized overlay
-inactive.color = "#696969"       # color of the border, as [r, g, b]/[r, g, b, a] or as hex string ("#rrggbb"/"#rrggbbaa")
+inactive.color = "#8d8d8dff"       # color of the border, as [r, g, b]/[r, g, b, a] or as hex string ("#rrggbb"/"#rrggbbaa")
 inactive.enabled = true          # shows the inactive overlays
-padding = 0                      # padding between the overlay and the window
+padding = 0                     # padding between the overlay and the window
 thickness = 1                    # thickness of the border
-update_while_animating = true    # the overlays will be updated while the animation is running 
+update_while_animating = false    # the overlays will be updated while the animation is running 
 update_while_dragging = true     # the overlays will be updated while dragging the window
 
 [core]
@@ -129,7 +133,7 @@ ignore_rules = [
     { exename = "OpenWith.exe" },                                                                    # "Open with" dialog 
     { exename = "StartMenuExperienceHost.exe" },                                                     # Manages the start menu
     { classname = "OperationStatusWindow" },                                                         # Explorer operation status 
-    { title = "/[Pp]icture.in.[Pp]icture/", classname = "/Chrome_WidgetWin_1|MozillaDialogClass/" }, # PIP Firefox/Chrome
+    # { title = "/[Pp]icture.in.[Pp]icture/", classname = "/Chrome_WidgetWin_1|MozillaDialogClass/" }, # PIP Firefox/Chrome
 ]
 
 # Custom rules

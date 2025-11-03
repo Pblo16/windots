@@ -291,3 +291,29 @@
     border: 1px solid var(--border-color);
     color: #ffffff;
 }
+
+/* --- CPU Widget --- */
+.cpu-widget {
+    color: var(--icon-color);
+}
+
+.cpu-widget.your_class {}
+
+
+/* If you are using class_name option */
+.cpu-widget .widget-container {}
+
+.cpu-widget .widget-container .label {}
+
+.cpu-widget .widget-container .label.alt {}
+
+.cpu-widget .widget-container .icon {
+    font-weight: 600;
+}
+
+.cpu-widget .label.status-low {}
+
+ibbbbb .cpu-widget .label.status-critical {}
+
+/* CPU progress bar styles if enabled */
+.cpu-widget .progress-circle {}
