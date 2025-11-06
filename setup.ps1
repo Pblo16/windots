@@ -136,6 +136,7 @@ Write-Host "[+] Configurando AutoHotkey para inicio automático..." -ForegroundC
 $startupFolder = [Environment]::GetFolderPath('Startup')
 $ahkMainScript = Join-Path $ahkConfig "Main.ahk"
 $shortcutPath = Join-Path $startupFolder "Windots-AHK.lnk"
+$mondrianExe = Join-Path $env:USERPROFILE ".config\mondrian\mondrian.exe"
 
 if (Test-Path $ahkMainScript) {
     Try {
@@ -162,6 +163,37 @@ if (Test-Path $ahkMainScript) {
 else {
     Write-Host "[!] No se encontró Main.ahk en: $ahkMainScript" -ForegroundColor Yellow
     Write-Host "[!] Asegúrate de que AutoHotkey v2.0 esté instalado." -ForegroundColor Yellow
+}
+
+# Crear acceso directo de Mondrian en el inicio de Windows
+Write-Host "[+] Configurando Mondrian para inicio automático..." -ForegroundColor Cyan
+$mondrianShortcutPath = Join-Path $startupFolder "Mondrian-WM.lnk"
+
+if (Test-Path $mondrianExe) {
+    Try {
+        $WshShell = New-Object -ComObject WScript.Shell
+        $MondrianShortcut = $WshShell.CreateShortcut($mondrianShortcutPath)
+        $MondrianShortcut.TargetPath = $mondrianExe
+        $MondrianShortcut.WorkingDirectory = $mondrianConfig
+        $MondrianShortcut.Description = "Mondrian Window Manager - Gestor de ventanas en mosaico"
+        $MondrianShortcut.IconLocation = "shell32.dll,14"
+        $MondrianShortcut.Save()
+        Write-Host "[✓] Acceso directo de Mondrian creado en: $mondrianShortcutPath" -ForegroundColor Green
+        
+        # Preguntar si desea ejecutar Mondrian ahora
+        $ejecutarMondrian = Show-Menu "¿Deseas ejecutar Mondrian ahora?" @("Sí", "No")
+        if ($ejecutarMondrian -eq "Sí") {
+            Start-Process $mondrianExe -WorkingDirectory $mondrianConfig
+            Write-Host "[✓] Mondrian ejecutado." -ForegroundColor Green
+        }
+    }
+    Catch {
+        Write-Host "[!] Error al crear acceso directo de Mondrian: $_" -ForegroundColor Red
+    }
+}
+else {
+    Write-Host "[!] No se encontró mondrian.exe en: $mondrianExe" -ForegroundColor Yellow
+    Write-Host "[!] Asegúrate de que Mondrian esté instalado correctamente." -ForegroundColor Yellow
 }
 
 # WSL
@@ -198,4 +230,33 @@ catch {
 
 Write-Host ""
 
+# Verificación final de la instalación
+Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
+Write-Host "  VERIFICACIÓN DE INSTALACIÓN" -ForegroundColor Cyan
+Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
+
+$verificaciones = @{
+    "AutoHotkey configurado" = (Test-Path $ahkMainScript)
+    "Mondrian configurado"   = (Test-Path $mondrianExe)
+    "AHK en startup"         = (Test-Path $shortcutPath)
+    "Mondrian en startup"    = (Test-Path $mondrianShortcutPath)
+    "YASB configurado"       = (Test-Path $yasbConfig)
+    "WezTerm configurado"    = (Test-Path $weztermConfig)
+    "Oh My Posh configurado" = (Test-Path $ohmyposhConfig)
+}
+
+foreach ($item in $verificaciones.GetEnumerator()) {
+    if ($item.Value) {
+        Write-Host "  ✓ $($item.Key)" -ForegroundColor Green
+    }
+    else {
+        Write-Host "  ✗ $($item.Key)" -ForegroundColor Yellow
+    }
+}
+
+Write-Host ""
 Write-Host "✅ Instalación completa. Reinicia el sistema para aplicar los cambios." -ForegroundColor Green
+Write-Host ""
+Write-Host "💡 Los siguientes programas se iniciarán automáticamente:" -ForegroundColor Cyan
+Write-Host "   • AutoHotkey (atajos de teclado)" -ForegroundColor White
+Write-Host "   • Mondrian (gestor de ventanas)" -ForegroundColor White

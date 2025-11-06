@@ -11,7 +11,7 @@ iwr -useb https://raw.githubusercontent.com/Pblo16/windots/main/setup.ps1 | iex
 
 ## Estructura del proyecto
 
-- `setup.ps1`: Script principal de instalación y configuración.
+- `setup.ps1`: Script principal de instalación, configuración y verificación.
 - `ahk/`: Scripts de AutoHotkey v2.0 para atajos de teclado personalizados.
   - `Main.ahk`: Script principal que carga todos los módulos.
   - `modules/`: Módulos organizados por funcionalidad.
@@ -57,9 +57,10 @@ iwr -useb https://raw.githubusercontent.com/Pblo16/windots/main/setup.ps1 | iex
 El script se encargará de:
 1. ✅ Clonar configuraciones en `~\.config\`
 2. ✅ Copiar scripts de AutoHotkey
-3. ✅ Crear acceso directo en el inicio de Windows
+3. ✅ Crear accesos directos en el inicio de Windows (AHK y Mondrian)
 4. ✅ Configurar variables de entorno
 5. ✅ (Opcional) Instalar y configurar WSL2 con Ubuntu
+6. ✅ Verificar la instalación completa
 
 ### Instalación manual
 
@@ -73,6 +74,8 @@ cd windots
 ```powershell
 .\setup.ps1
 ```
+
+El script incluye verificación automática al final y te mostrará el estado de cada componente instalado.
 
 ## Configuración de AutoHotkey
 
