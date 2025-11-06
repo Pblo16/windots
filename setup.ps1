@@ -34,8 +34,8 @@ $script:SkipAll = $false
 # Función de copia que pregunta si debe sobrescribir archivos existentes
 function Copy-WithPrompt {
     param (
-        [Parameter(Mandatory=$true)][string]$Source,
-        [Parameter(Mandatory=$true)][string]$Destination
+        [Parameter(Mandatory = $true)][string]$Source,
+        [Parameter(Mandatory = $true)][string]$Destination
     )
 
     if (-not (Test-Path $Destination)) {
@@ -43,7 +43,7 @@ function Copy-WithPrompt {
     }
 
     # Normalizar base del origen (quitar posible "\\*" o "*")
-    $baseSource = $Source -replace '\\\*$','' -replace '\*$',''
+    $baseSource = $Source -replace '\\\*$', '' -replace '\*$', ''
 
     # Mostrar info de qué base de origen y destino se van a procesar
     $rootName = Split-Path $baseSource -Leaf
@@ -52,7 +52,7 @@ function Copy-WithPrompt {
     # Crear subdirectorios primero
     $dirs = Get-ChildItem -Path $baseSource -Recurse -Force -Directory -ErrorAction SilentlyContinue
     foreach ($d in $dirs) {
-        $rel = $d.FullName.Substring($baseSource.Length).TrimStart('\','/')
+        $rel = $d.FullName.Substring($baseSource.Length).TrimStart('\', '/')
         $destDir = Join-Path $Destination $rel
         if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Force -Path $destDir | Out-Null }
     }
@@ -62,7 +62,7 @@ function Copy-WithPrompt {
     $files = Get-ChildItem -Path $baseSource -Recurse -Force -File -ErrorAction SilentlyContinue
     $fileMap = @{}
     foreach ($f in $files) {
-        $rel = $f.FullName.Substring($baseSource.Length).TrimStart('\','/')
+        $rel = $f.FullName.Substring($baseSource.Length).TrimStart('\', '/')
         $fileMap[$rel] = $f.FullName
     }
     $relKeys = $fileMap.Keys
@@ -107,12 +107,14 @@ $yasbConfig = "$env:USERPROFILE\.config\yasb"
 $mondrianConfig = "$env:USERPROFILE\.config\mondrian"
 $ohmyposhConfig = "$env:USERPROFILE\.oh-my-posh"
 $weztermConfig = "$env:USERPROFILE\.config\wezterm"
+$ahkConfig = "$env:USERPROFILE\.config\ahk"
 $wallpapersConfig = "$env:USERPROFILE\.config\wallpapers"
 
 New-Item -ItemType Directory -Force -Path $yasbConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $mondrianConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $ohmyposhConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $weztermConfig | Out-Null
+New-Item -ItemType Directory -Force -Path $ahkConfig | Out-Null
 New-Item -ItemType Directory -Force -Path $wallpapersConfig | Out-Null
 
 # Copiar configuraciones con prompt si el archivo ya existe
@@ -120,6 +122,7 @@ Copy-WithPrompt "$repoPath\yasb\*" $yasbConfig
 Copy-WithPrompt "$repoPath\mondrian\*" $mondrianConfig
 Copy-WithPrompt "$repoPath\oh-my-posh\*" $ohmyposhConfig
 Copy-WithPrompt "$repoPath\wezterm\*" $weztermConfig
+Copy-WithPrompt "$repoPath\ahk\*" $ahkConfig
 
 # Clonar wallpapers repo en .config\wallpapers
 Write-Host "[+] Clonando wallpapers en $wallpapersConfig..." -ForegroundColor Cyan
@@ -127,6 +130,39 @@ if (Test-Path $wallpapersConfig) { Remove-Item -Recurse -Force $wallpapersConfig
 git clone https://github.com/fr0st-iwnl/wallz.git $wallpapersConfig
 
 Write-Host "[✓] Configuraciones copiadas correctamente." -ForegroundColor Green
+
+# Crear acceso directo de AutoHotkey en el inicio de Windows
+Write-Host "[+] Configurando AutoHotkey para inicio automático..." -ForegroundColor Cyan
+$startupFolder = [Environment]::GetFolderPath('Startup')
+$ahkMainScript = Join-Path $ahkConfig "Main.ahk"
+$shortcutPath = Join-Path $startupFolder "Windots-AHK.lnk"
+
+if (Test-Path $ahkMainScript) {
+    Try {
+        $WshShell = New-Object -ComObject WScript.Shell
+        $Shortcut = $WshShell.CreateShortcut($shortcutPath)
+        $Shortcut.TargetPath = $ahkMainScript
+        $Shortcut.WorkingDirectory = $ahkConfig
+        $Shortcut.Description = "Windots AutoHotkey Scripts - Atajos de teclado personalizados"
+        $Shortcut.IconLocation = "shell32.dll,165"
+        $Shortcut.Save()
+        Write-Host "[✓] Acceso directo creado en: $shortcutPath" -ForegroundColor Green
+        
+        # Preguntar si desea ejecutar los scripts ahora
+        $ejecutarAhora = Show-Menu "¿Deseas ejecutar los scripts de AutoHotkey ahora?" @("Sí", "No")
+        if ($ejecutarAhora -eq "Sí") {
+            Start-Process $ahkMainScript
+            Write-Host "[✓] Scripts de AutoHotkey ejecutados." -ForegroundColor Green
+        }
+    }
+    Catch {
+        Write-Host "[!] Error al crear acceso directo: $_" -ForegroundColor Red
+    }
+}
+else {
+    Write-Host "[!] No se encontró Main.ahk en: $ahkMainScript" -ForegroundColor Yellow
+    Write-Host "[!] Asegúrate de que AutoHotkey v2.0 esté instalado." -ForegroundColor Yellow
+}
 
 # WSL
 $usarWSL = Show-Menu "¿Quieres usar WSL?" @("Sí", "No")
