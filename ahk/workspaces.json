@@ -1,0 +1,22 @@
+﻿{
+  "test": [
+    {
+      "title": "Visual Studio Code",
+      "process": "Code.exe",
+      "path": "C:\\Users\\pablo\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+      "x": 1369,
+      "y": 42,
+      "width": 1241,
+      "height": 1034
+    },
+    {
+      "title": "pablo",
+      "process": "warp.exe",
+      "path": "C:\\Users\\pablo\\AppData\\Local\\Programs\\Warp\\warp.exe",
+      "x": 3,
+      "y": 43,
+      "width": 1360,
+      "height": 722
+    }
+  ]
+}

@@ -55,6 +55,13 @@ Simplemente ejecuta `Main.ahk` haciendo doble clic en él.
 | `Ctrl + Shift + L` | Restaurar última ventana oculta |
 | `Alt + Shift + Q` | Cerrar ventana activa (Alt+F4) |
 
+### Espacios de trabajo
+
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl + Alt + S` | Guardar espacio de trabajo actual |
+| `Ctrl + Alt + O` | Abrir menú de espacios de trabajo guardados |
+
 ### Atajos de Warp Terminal
 
 | Atajo | Acción |
