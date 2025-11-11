@@ -16,7 +16,64 @@
     {
       "type": "prompt",
       "alignment": "left",
+      "newline": true,
       "segments": [
+        {
+          "background": "transparent",
+          "foreground": "p:text",
+          "style": "plain",
+          "template": "\u250c",
+          "type": "text"
+        },
+        {
+          "background": "p:background",
+          "foreground": "p:text",
+          "properties": {
+            "windows": "\ue62a",
+            "linux": "\uf17c",
+            "ubuntu": "\uf31b",
+            "macos": "\uf179"
+          },
+          "style": "plain",
+          "template": " {{.Icon}} ",
+          "type": "os"
+        },
+        {
+          "background": "transparent",
+          "foreground": "p:background",
+          "style": "plain",
+          "template": "\u2800",
+          "type": "text"
+        },
+        {
+          "background": "transparent",
+          "foreground": "p:white",
+          "properties": {
+            "folder_icon": "\uf07b ",
+            "folder_separator_template": "/ ",
+            "home_icon": " ",
+            "style": "agnoster"
+          },
+          "style": "plain",
+          "template": "<p:white>[</> {{.Path}} <p:white>]</> ",
+          "type": "path"
+        },
+        {
+          "type": "git",
+          "style": "plain",
+          "foreground": "p:green",
+          "properties": {
+            "branch_icon": " "
+          },
+          "template": "{{ .HEAD }}"
+        },
+        {
+          "background": "transparent",
+          "foreground": "p:background",
+          "style": "plain",
+          "template": "\u2800",
+          "type": "text"
+        },
         {
           "type": "node",
           "style": "plain",
@@ -27,42 +84,6 @@
             "display_version": true
           },
           "template": "  {{ .Full }} "
-        },
-        {
-          "type": "node",
-          "background": "transparent",
-          "foreground": "p:background",
-          "style": "plain",
-          "template": "\ue0b0 "
-        },
-        {
-          "type": "path",
-          "style": "plain",
-          "foreground": "p:cyan",
-          "background": "p:background",
-
-          "properties": {
-            "folder_icon": "  ",
-            "home_icon": "  - - -",
-            "style": "agnoster_short"
-          },
-          "template": "{{ .Path }} "
-        },
-        {
-          "background": "transparent",
-          "foreground": "p:background",
-          "style": "plain",
-          "template": "\ue0b0 ",
-          "type": "text"
-        },
-        {
-          "type": "git",
-          "style": "plain",
-          "foreground": "p:green",
-          "properties": {
-            "branch_icon": " "
-          },
-          "template": "{{ .HEAD }}"
         }
       ]
     },
@@ -72,13 +93,30 @@
       "newline": true,
       "segments": [
         {
-          "type": "status",
-          "style": "plain",
-          "foreground": "p:muted",
+          "background": "transparent",
+          "foreground": "p:white",
+          "foreground_templates": [
+            "{{if eq .Code 0}}{{end}}"
+          ],
           "properties": {
             "always_enabled": true
           },
-          "template": "› "
+          "style": "plain",
+          "template": "<p:white>\u2514",
+          "type": "status"
+        },
+        {
+          "background": "transparent",
+          "foreground": "p:white",
+          "foreground_templates": [
+            "{{if gt .Code 0}}#ff3030{{end}}"
+          ],
+          "properties": {
+            "always_enabled": true
+          },
+          "style": "plain",
+          "template": "\u276f",
+          "type": "status"
         }
       ]
     }
@@ -86,7 +124,7 @@
   "transient_prompt": {
     "background": "transparent",
     "foreground": "p:accent",
-    "template": "› "
+    "template": "›  "
   },
   "console_title_template": "{{ .Folder }}",
   "version": 3
