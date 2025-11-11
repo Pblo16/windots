@@ -16,8 +16,8 @@
         }
     ],
     "centerOnLaunch": true,
-    "copyFormatting": "none",
-    "copyOnSelect": false,
+    "copyFormatting": "html",
+    "copyOnSelect": true,
     "defaultProfile": "{aa4aa5da-9254-56a4-a88e-b9e85268020b}",
     "firstWindowPreference": "persistedWindowLayout",
     "keybindings": 
@@ -39,15 +39,11 @@
             "keys": "ctrl+shift+f"
         },
         {
-            "id": "Terminal.DuplicatePaneAuto",
-            "keys": "alt+shift+d"
-        },
-        {
             "id": "Terminal.ClosePane",
             "keys": "ctrl+w"
         },
         {
-            "id": "User.splitPane.91AB55B1",
+            "id": "Terminal.DuplicatePaneAuto",
             "keys": "ctrl+alt+d"
         },
         {
@@ -71,7 +67,8 @@
             {
                 "face": "JetBrainsMonoNL Nerd Font",
                 "size": 10
-            }
+            },
+            "startingDirectory": null
         },
         "list": 
         [
