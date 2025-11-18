@@ -1,29 +1,23 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": 
-    [
+    "actions": [
         {
-            "command": 
-            {
+            "command": {
                 "action": "splitPane"
             },
             "id": "User.splitPane.91AB55B1"
-        },
-        {
-            "command": "togglePaneZoom",
-            "id": "User.togglePaneZoom"
         }
     ],
     "centerOnLaunch": true,
     "copyFormatting": "html",
     "copyOnSelect": true,
-    "defaultProfile": "{aa4aa5da-9254-56a4-a88e-b9e85268020b}",
+    "defaultProfile": "{3748ac31-2be5-5b95-8f59-3b7de8da1359}",
     "firstWindowPreference": "persistedWindowLayout",
-    "keybindings": 
-    [
+    "initialPosition": ",",
+    "keybindings": [
         {
-            "id": "Terminal.CopyToClipboard",
+            "id": null,
             "keys": "ctrl+c"
         },
         {
@@ -31,47 +25,42 @@
             "keys": "ctrl+shift+w"
         },
         {
-            "id": "Terminal.PasteFromClipboard",
+            "id": null,
             "keys": "ctrl+v"
         },
         {
-            "id": "Terminal.FindText",
+            "id": null,
             "keys": "ctrl+shift+f"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+d"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+z"
         },
         {
             "id": "Terminal.ClosePane",
             "keys": "ctrl+w"
-        },
-        {
-            "id": "Terminal.DuplicatePaneAuto",
-            "keys": "ctrl+alt+d"
-        },
-        {
-            "id": "User.togglePaneZoom",
-            "keys": "ctrl+alt+z"
         }
     ],
     "launchMode": "focus",
-    "newTabMenu": 
-    [
+    "newTabMenu": [
         {
             "type": "remainingProfiles"
         }
     ],
-    "profiles": 
-    {
-        "defaults": 
-        {
-            "colorScheme": "Dark+",
-            "font": 
-            {
-                "face": "JetBrainsMonoNL Nerd Font",
-                "size": 10
+    "profiles": {
+        "defaults": {
+            "colorScheme": "Pablo",
+            "font": {
+                "face": "JetBrainsMono Nerd Font",
+                "size": 12
             },
             "startingDirectory": null
         },
-        "list": 
-        [
+        "list": [
             {
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
@@ -97,37 +86,49 @@
                 "source": "Windows.Terminal.PowershellCore"
             },
             {
-                "guid": "{aa4aa5da-9254-56a4-a88e-b9e85268020b}",
-                "hidden": false,
-                "name": "Ubuntu",
-                "source": "Microsoft.WSL"
-            },
-            {
-                "guid": "{018792ab-9312-5e1f-8012-3eea03b44076}",
+                "guid": "{15d1e493-7bf6-5344-9aa5-cad5f25df124}",
                 "hidden": true,
-                "name": "Developer Command Prompt for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{d38199b8-7c2b-5d92-bace-7a9d789d1e0f}",
-                "hidden": true,
-                "name": "Developer PowerShell for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{c433567a-3207-5229-936e-98bdf37a350f}",
-                "hidden": false,
                 "name": "Developer Command Prompt for VS 2022 (2)",
                 "source": "Windows.Terminal.VisualStudio"
             },
             {
-                "guid": "{a6d13e91-d3a3-54be-b6e4-a26cfe412d9f}",
-                "hidden": false,
+                "guid": "{7792bc89-1a7f-5f9a-9413-b99cff7e545d}",
+                "hidden": true,
                 "name": "Developer PowerShell for VS 2022 (2)",
                 "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{3748ac31-2be5-5b95-8f59-3b7de8da1359}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "source": "Microsoft.WSL"
             }
         ]
     },
-    "schemes": [],
+    "schemes": [
+        {
+            "name": "Pablo",
+            "background": "#16191d",
+            "black": "#16161C",
+            "blue": "#26BBD9",
+            "brightBlack": "#F075B7",
+            "brightBlue": "#3FC6DE",
+            "brightCyan": "#6BE6E6",
+            "brightGreen": "#3FDAA4",
+            "brightPurple": "#F075B7",
+            "brightRed": "#EC6A88",
+            "brightWhite": "#FDF0ED",
+            "brightYellow": "#FBC3A7",
+            "cursorColor": "#26BBD9",
+            "cyan": "#59E3E3",
+            "foreground": "#FDF0ED",
+            "green": "#29D398",
+            "purple": "#EE64AE",
+            "red": "#E95678",
+            "selectionBackground": "#26BBD9",
+            "white": "#FADAD1",
+            "yellow": "#FAB795"
+        }
+    ],
     "themes": []
 }
